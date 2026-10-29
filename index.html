@@ -382,7 +382,7 @@
         let liveMatch = { samScore: 3, kiaScore: 2, inning: '5회초' };
         let players = [];
 
-        // LOBBY CONTROL FUNCTIONS
+        // LOBBY CONTROL FUNCTIONS (Fixed ReferenceError)
         function switchLobbyTab(mode) {
             const btnJoin = document.getElementById('lobby-btn-join');
             const btnCreate = document.getElementById('lobby-btn-create');
@@ -390,15 +390,15 @@
             const formCreate = document.getElementById('lobby-form-create');
 
             if (mode === 'join') {
-                btnJoin.className = "py-2.5 rounded-lg bg-amber-500 text-slate-950 shadow";
-                btnCreate.className = "py-2.5 rounded-lg text-slate-400 hover:text-white";
-                formJoin.classList.remove('hidden');
-                formCreate.classList.add('hidden');
+                if (btnJoin) btnJoin.className = "py-2.5 rounded-lg bg-amber-500 text-slate-950 shadow";
+                if (btnCreate) btnCreate.className = "py-2.5 rounded-lg text-slate-400 hover:text-white";
+                if (formJoin) formJoin.classList.remove('hidden');
+                if (formCreate) formCreate.classList.add('hidden');
             } else {
-                btnCreate.className = "py-2.5 rounded-lg bg-amber-500 text-slate-950 shadow";
-                btnJoin.className = "py-2.5 rounded-lg text-slate-400 hover:text-white";
-                formCreate.classList.remove('hidden');
-                formJoin.classList.add('hidden');
+                if (btnCreate) btnCreate.className = "py-2.5 rounded-lg bg-amber-500 text-slate-950 shadow";
+                if (btnJoin) btnJoin.className = "py-2.5 rounded-lg text-slate-400 hover:text-white";
+                if (formCreate) formCreate.classList.remove('hidden');
+                if (formJoin) formJoin.classList.add('hidden');
             }
         }
 
@@ -406,7 +406,15 @@
             const rawId = document.getElementById('create-room-id').value.trim();
             const moneyVal = parseInt(document.getElementById('create-room-money').value, 10);
             
-            roomId = rawId ? rawId.toUpperCase() : 'ROOM-' + Math.floor(1000 + Math.random() * 9000);
+            const targetRoomId = rawId ? rawId.toUpperCase() : 'ROOM-' + Math.floor(1000 + Math.random() * 9000);
+
+            const existingData = localStorage.getItem(`sam_kia_${targetRoomId}`);
+            if (existingData && rawId) {
+                showAlert(`이미 존재하는 방 ID('${targetRoomId}')입니다. '방 입장하기'를 이용해 주세요!`, 'error');
+                return;
+            }
+
+            roomId = targetRoomId;
             initialMoney = moneyVal || 10000;
 
             players = [
@@ -430,6 +438,12 @@
             updateUrlWithRoom();
             loadData();
 
+            const existingData = localStorage.getItem(`sam_kia_${roomId}`);
+            if (!existingData && players.length === 0) {
+                showAlert(`존재하지 않는 방 ID('${roomId}')입니다. 올바른 방 번호를 입력하거나 '방 만들기'를 이용해 주세요.`, 'error');
+                return;
+            }
+
             if (players.length === 0) {
                 players = [
                     { id: Date.now(), name: '참여자 1', money: initialMoney, betAmount: 1000, samPredict: 3, kiaPredict: 2, locked: false }
@@ -444,9 +458,7 @@
             try {
                 const newUrl = `${window.location.pathname}?room=${roomId}`;
                 window.history.replaceState({ path: newUrl }, '', newUrl);
-            } catch(e) {
-                // Ignore sandboxed iframe restriction in preview mode
-            }
+            } catch(e) {}
         }
 
         function enterGameSession() {
@@ -503,14 +515,26 @@
 
         // Share Link Copy
         function copyShareLink() {
-            const shareUrl = window.location.href.split('?')[0] + `?room=${roomId}`;
+            const baseUrl = window.location.href.split('?')[0];
+            const shareUrl = `${baseUrl}?room=${roomId}`;
+            
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    showAlert(`[방 ID: ${roomId}] 초대 링크가 복사되었습니다! 카톡으로 공유하세요.`, 'success');
+                }).catch(() => fallbackCopy(shareUrl));
+            } else {
+                fallbackCopy(shareUrl);
+            }
+        }
+
+        function fallbackCopy(text) {
             const temp = document.createElement('input');
             document.body.appendChild(temp);
-            temp.value = shareUrl;
+            temp.value = text;
             temp.select();
             document.execCommand('copy');
             document.body.removeChild(temp);
-            showAlert('초대 링크가 복사되었습니다! 카톡으로 공유하세요.', 'success');
+            showAlert(`[방 ID: ${roomId}] 초대 링크가 복사되었습니다! 카톡으로 공유하세요.`, 'success');
         }
 
         // Tab Switcher
@@ -633,7 +657,6 @@
                         <div class="flex justify-between items-start mb-3">
                             <div>
                                 <h4 class="font-bold text-lg text-white flex items-center gap-2">${player.name}</h4>
-                                <!-- Editable Money Input -->
                                 <div class="text-xs text-amber-400 font-bold mt-1 flex items-center gap-1">
                                     <i class="fa-solid fa-coins"></i> 보유금:
                                     <input type="number" min="0" value="${player.money}" 
@@ -981,7 +1004,6 @@
             showAlert(`전체 게임머니가 시작 기본금(${initialMoney.toLocaleString()} P)으로 초기화되었습니다.`, 'info');
         }
 
-        // URL Query Parameter Auto Join
         window.onload = function() {
             const params = new URLSearchParams(window.location.search);
             const queryRoom = params.get('room');
