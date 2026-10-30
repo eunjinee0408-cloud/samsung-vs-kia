@@ -249,33 +249,34 @@
         <p>KBO 10개 구단 실시간 공유 승부예측 &bull; Firebase Realtime Sync</p>
     </footer>
 
-    <!-- 
+<!-- 
       ========================================================================
-      👇 [여기에 붙여넣으세요!] 파이어베이스 SDK 및 자바스크립트 게임 엔진 영역 👇
+      🔥 파이어베이스 SDK 및 실시간 공유 게임 엔진 (통째로 복사해서 사용하세요)
       ========================================================================
     -->
     <script type="module">
+        // 1. 파이어베이스 라이브러리 불러오기 (수정하지 마시고 그대로 두세요!)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // 👉 아래 firebaseConfig 칸에 파이어베이스 콘솔에서 복사한 본인의 열쇠 코드를 넣으세요!
-        const firebaseConfig = {
-          apiKey: "AIzaSyDPT9oQ4rtVdPjSBY7mzqFQ714CtwKfYHw",
-          authDomain: "baseball-368e9.firebaseapp.com",
-          databaseURL: "https://baseball-368e9-default-rtdb.firebaseio.com",
-          projectId: "baseball-368e9",
-          storageBucket: "baseball-368e9.firebasestorage.app",
-          messagingSenderId: "520728823048",
-          appId: "1:520728823048:web:89ba969df6787bdc2bd8bd",
-          measurementId: "G-XM3L46Y85M"
-        };
+        // 2. 💡 [여기만 본인 파이어베이스 정보로 수정하세요!]
+       const firebaseConfig = {
+  apiKey: "AIzaSyDPT9oQ4rtVdPjSBY7mzqFQ714CtwKfYHw",
+  authDomain: "baseball-368e9.firebaseapp.com",
+  databaseURL: "https://baseball-368e9-default-rtdb.firebaseio.com",
+  projectId: "baseball-368e9",
+  storageBucket: "baseball-368e9.firebasestorage.app",
+  messagingSenderId: "520728823048",
+  appId: "1:520728823048:web:89ba969df6787bdc2bd8bd",
+  measurementId: "G-XM3L46Y85M"
+};
 
-
+        // 3. 파이어베이스 및 데이터베이스 초기화
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const matchRef = ref(db, 'liveMatch');
 
-        // KBO 10개 구단 데이터
+        // KBO 10개 구단 데이터 목록
         const kboTeams = ["삼성", "KIA", "LG", "두산", "SSG", "KT", "NC", "롯데", "한화", "키움"];
 
         let matchData = {
@@ -288,7 +289,7 @@
             players: []
         };
 
-        // 실시간 Firebase 동기화 (접속자 모두 동일 화면 반영)
+        // 4. 실시간 Firebase 동기화 (접속한 모든 사람의 화면에 동시에 반영)
         onValue(matchRef, (snapshot) => {
             const data = snapshot.val();
             if (!data) {
@@ -302,7 +303,7 @@
             }
         });
 
-        // 스코어보드 UI 업데이트
+        // 5. 스코어보드 UI 업데이트
         function renderScoreboard() {
             document.getElementById('header-home-team').innerText = matchData.homeTeam;
             document.getElementById('header-away-team').innerText = matchData.awayTeam;
@@ -324,10 +325,10 @@
             }
         }
 
-        // 관리자 제어 패널 (팀 변경, 점수 변경, 비밀번호 검증)
+        // 6. 관리자 제어 패널 (구단 변경, 실시간 점수 변경, 비밀번호 검증 및 수정)
         window.openAdminPanel = function() {
             let inputPw = prompt("관리자 비밀번호를 입력하세요:");
-            if (inputPw !== matchData.adminPassword) {
+            if (inputPw !== (matchData.adminPassword || "1234")) {
                 alert("비밀번호가 틀렸습니다!");
                 return;
             }
@@ -342,25 +343,38 @@
             if (choice === "1") {
                 let home = prompt("홈팀 선택 (" + kboTeams.join(", ") + ")", matchData.homeTeam);
                 let away = prompt("어웨이팀 선택 (" + kboTeams.join(", ") + ")", matchData.awayTeam);
-                if (kboTeams.includes(home) && kboTeams.includes(away)) {
+                if (home && away && kboTeams.includes(home) && kboTeams.includes(away)) {
+                    matchData.homeTeam = home;
+                    matchData.awayTeam = away;
                     update(matchRef, { homeTeam: home, awayTeam: away });
+                    alert("홈/어웨이 팀이 정상적으로 변경되었습니다!");
                 } else {
-                    alert("올바른 구단명을 입력해주세요.");
+                    alert("올바른 KBO 구단명을 정확히 입력해주세요.");
                 }
             } else if (choice === "2") {
                 let hScore = parseInt(prompt("홈팀 점수", matchData.homeScore), 10);
                 let aScore = parseInt(prompt("어웨이팀 점수", matchData.awayScore), 10);
                 let inn = prompt("이닝 (예: 5회초, 경기종료)", matchData.inning);
                 if (!isNaN(hScore) && !isNaN(aScore)) {
-                    update(matchRef, { homeScore: hScore, awayScore: aScore, inning: inn });
+                    matchData.homeScore = hScore;
+                    matchData.awayScore = aScore;
+                    if (inn) matchData.inning = inn;
+                    update(matchRef, { homeScore: hScore, awayScore: aScore, inning: matchData.inning });
+                    alert("경기 점수가 실시간 반영되었습니다!");
+                } else {
+                    alert("점수는 숫자만 입력해 주세요.");
                 }
             } else if (choice === "3") {
                 let newPw = prompt("새 관리자 비밀번호를 입력하세요:");
-                if (newPw) update(matchRef, { adminPassword: newPw });
+                if (newPw) {
+                    matchData.adminPassword = newPw;
+                    update(matchRef, { adminPassword: newPw });
+                    alert("관리자 비밀번호가 변경되었습니다!");
+                }
             }
         };
 
-        // 참여자 배팅 카드리스트
+        // 7. 참여자 배팅 카드리스트 렌더링
         function renderBettingCards() {
             const container = document.getElementById('betting-cards-container');
             const badge = document.getElementById('player-count-badge');
@@ -368,7 +382,7 @@
             badge.textContent = `${players.length}명`;
 
             if (players.length === 0) {
-                container.innerHTML = `<div class="col-span-full text-center py-12 glass-panel rounded-2xl text-slate-500">참여자가 없습니다. 상단에서 추가해주세요!</div>`;
+                container.innerHTML = `<div class="col-span-full text-center py-12 glass-panel rounded-2xl text-slate-500">등록된 테이블이 없습니다. 상단에서 추가해 주세요!</div>`;
                 return;
             }
 
@@ -376,7 +390,7 @@
                 <div class="glass-panel rounded-2xl p-5 border ${player.locked ? 'border-amber-500/50 bg-slate-900/90' : 'border-slate-700/60'}">
                     <div class="flex justify-between items-center mb-3">
                         <h4 class="font-bold text-lg text-white">${player.name}</h4>
-                        <span class="text-xs text-amber-400 font-bold">${player.money.toLocaleString()} P</span>
+                        <span class="text-xs text-amber-400 font-bold">${(player.money || 10000).toLocaleString()} P</span>
                     </div>
                     <div class="grid grid-cols-2 gap-2 mb-3 text-center">
                         <div class="bg-blue-900/30 p-2 rounded-xl border border-blue-500/30">
@@ -388,36 +402,42 @@
                             <span class="text-2xl font-black text-white">${player.awayPredict || 0}</span>
                         </div>
                     </div>
-                    <button onclick="window.userBet(${idx})" class="w-full py-2.5 rounded-xl font-bold text-sm bg-amber-500 hover:bg-amber-400 text-slate-950">
-                        ${player.locked ? '배팅 수정' : '배팅 제출/수정'}
+                    <button onclick="window.userBet(${idx})" class="w-full py-2.5 rounded-xl font-bold text-sm bg-amber-500 hover:bg-amber-400 text-slate-950 transition-all">
+                        ${player.locked ? '배팅 수정하기' : '배팅 제출/수정'}
                     </button>
                 </div>
             `).join('');
         }
 
-        // 배팅 입력/수정
+        // 8. 참여자 배팅 예측값 제출/수정
         window.userBet = function(idx) {
             let p = matchData.players[idx];
             let h = parseInt(prompt(`${matchData.homeTeam} 예측 점수:`, p.homePredict || 0), 10);
             let a = parseInt(prompt(`${matchData.awayTeam} 예측 점수:`, p.awayPredict || 0), 10);
-            let bet = parseInt(prompt(`배팅 금액 (보유: ${p.money}P):`, p.betAmount || 1000), 10);
+            let bet = parseInt(prompt(`배팅 금액 (보유: ${p.money || 10000}P):`, p.betAmount || 1000), 10);
 
             if (!isNaN(h) && !isNaN(a) && !isNaN(bet)) {
                 matchData.players[idx].homePredict = h;
                 matchData.players[idx].awayPredict = a;
-                matchData.players[idx].betAmount = Math.min(bet, p.money);
+                matchData.players[idx].betAmount = Math.min(bet, p.money || 10000);
                 matchData.players[idx].locked = true;
                 update(matchRef, { players: matchData.players });
             }
         };
 
-        // 참여자 추가
+        // 9. 참여자 / 테이블 추가 기능
         window.addPlayer = function() {
             const input = document.getElementById('new-player-name');
+            if (!input) return;
             const name = input.value.trim();
-            if (!name) return;
+
+            if (!name) {
+                alert("참여자 또는 테이블 이름을 입력하세요.");
+                return;
+            }
 
             if (!matchData.players) matchData.players = [];
+
             matchData.players.push({
                 name: name,
                 money: 10000,
@@ -431,26 +451,28 @@
             input.value = '';
         };
 
-        // 랭킹 렌더링
+        // 10. 실시간 랭킹 순위표
         function renderLeaderboard() {
             const tbody = document.getElementById('leaderboard-table-body');
-            const players = [...(matchData.players || [])].sort((a,b) => b.money - a.money);
+            if (!tbody) return;
+
+            const players = [...(matchData.players || [])].sort((a,b) => (b.money || 0) - (a.money || 0));
 
             tbody.innerHTML = players.map((p, i) => `
-                <tr class="hover:bg-slate-800/40">
+                <tr class="hover:bg-slate-800/40 transition-colors">
                     <td class="py-3 px-4 font-bold text-amber-400">${i + 1}위</td>
                     <td class="py-3 px-4 font-bold text-white">${p.name}</td>
                     <td class="py-3 px-4 text-center">${p.homePredict || 0} : ${p.awayPredict || 0}</td>
                     <td class="py-3 px-4 text-center text-amber-400">${(p.betAmount || 0).toLocaleString()} P</td>
-                    <td class="py-3 px-4 text-right font-black text-emerald-400">${p.money.toLocaleString()} P</td>
+                    <td class="py-3 px-4 text-right font-black text-emerald-400">${(p.money || 10000).toLocaleString()} P</td>
                 </tr>
             `).join('');
         }
 
-        // 결과 정산
+        // 11. 최종 경기 결과 정산
         window.calculateSettlement = function() {
             let inputPw = prompt("관리자 비밀번호를 입력하세요:");
-            if (inputPw !== matchData.adminPassword) {
+            if (inputPw !== (matchData.adminPassword || "1234")) {
                 alert("비밀번호가 틀렸습니다!");
                 return;
             }
@@ -458,34 +480,42 @@
             const actH = matchData.homeScore;
             const actA = matchData.awayScore;
 
+            if (!matchData.players || matchData.players.length === 0) {
+                alert("정산할 참여자가 없습니다.");
+                return;
+            }
+
             matchData.players.forEach(p => {
                 if (p.homePredict === actH && p.awayPredict === actA) {
-                    p.money += (p.betAmount * 2); 
+                    p.money = (p.money || 10000) + ((p.betAmount || 1000) * 2); 
                 } else {
-                    p.money -= p.betAmount; 
+                    p.money = Math.max(0, (p.money || 10000) - (p.betAmount || 1000)); 
                 }
                 p.locked = false;
             });
 
             update(matchRef, { players: matchData.players });
-            alert("정산이 완료되었습니다!");
+            alert("경기 정산이 완료되었습니다!");
             try { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); } catch(e) {}
         };
 
-        // 탭 전환 & 링크 복사
+        // 12. 탭 전환 및 링크 복사 기능
         window.switchTab = function(tabName) {
             ['betting', 'settlement', 'leaderboard', 'rules'].forEach(t => {
-                document.getElementById(`tab-${t}`).className = (t === tabName) 
-                    ? "px-3 py-1.5 rounded-lg font-bold bg-amber-500 text-slate-950 shadow-md"
-                    : "px-3 py-1.5 rounded-lg font-bold text-slate-300 hover:text-white hover:bg-slate-800";
-                document.getElementById(`sec-${t}`).classList.toggle('hidden', t !== tabName);
+                const btn = document.getElementById(`tab-${t}`);
+                const sec = document.getElementById(`sec-${t}`);
+                if (btn && sec) {
+                    btn.className = (t === tabName) 
+                        ? "px-3 py-1.5 rounded-lg font-bold bg-amber-500 text-slate-950 shadow-md"
+                        : "px-3 py-1.5 rounded-lg font-bold text-slate-300 hover:text-white hover:bg-slate-800";
+                    sec.classList.toggle('hidden', t !== tabName);
+                }
             });
+            if (tabName === 'leaderboard') renderLeaderboard();
         };
 
         window.copyShareLink = function() {
             navigator.clipboard.writeText(window.location.href);
-            alert("공유 링크가 복사되었습니다!");
+            alert("초대 링크가 복사되었습니다! 카카오톡 등으로 공유해 보세요.");
         };
     </script>
-</body>
-</html>
