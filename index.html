@@ -238,14 +238,14 @@
         <p>KBO 10개 구단 실시간 공유 승부예측 &bull; Firebase Realtime Sync</p>
     </footer>
 
-    <!-- 🔥 FIREBASE ENGINE (모듈 스크립트) -->
+    <!-- 🔥 FIREBASE ENGINE & UI CONTROLS -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // ⚠️ [중요] 아래 const firebaseConfig 객체의 값들만 본인 Firebase 프로젝트 설정 값으로 수정해주세요!
+        // ⚠️ [중요] 본인의 Firebase 설정 값으로 채워주세요!
         const firebaseConfig = {
- apiKey: "AIzaSyDPT9oQ4rtVdPjSBY7mzqFQ714CtwKfYHw",
+  apiKey: "AIzaSyDPT9oQ4rtVdPjSBY7mzqFQ714CtwKfYHw",
   authDomain: "baseball-368e9.firebaseapp.com",
   databaseURL: "https://baseball-368e9-default-rtdb.firebaseio.com",
   projectId: "baseball-368e9",
@@ -254,7 +254,6 @@
   appId: "1:520728823048:web:89ba969df6787bdc2bd8bd",
   measurementId: "G-XM3L46Y85M"
 };
-
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
@@ -310,6 +309,7 @@
             }
         }
 
+        // 화살표 버튼으로 예측 점수 및 금액을 직접 조작하는 카드 UI 렌더링
         function renderBettingCards() {
             const container = document.getElementById('betting-cards-container');
             const badge = document.getElementById('player-count-badge');
@@ -322,27 +322,91 @@
             }
 
             container.innerHTML = players.map((player, idx) => `
-                <div class="glass-panel rounded-2xl p-5 border ${player.locked ? 'border-amber-500/50 bg-slate-900/90' : 'border-slate-700/60'}">
+                <div class="glass-panel rounded-2xl p-5 border ${player.locked ? 'border-amber-500/50 bg-slate-900/90' : 'border-slate-700/60'} relative overflow-hidden">
+                    ${player.locked ? `<div class="absolute top-0 right-0 bg-amber-500 text-slate-950 text-[10px] font-black px-3 py-1 rounded-bl-xl uppercase tracking-wider"><i class="fa-solid fa-lock"></i> 배팅 확정됨</div>` : ''}
+                    
                     <div class="flex justify-between items-center mb-3">
                         <h4 class="font-bold text-lg text-white">${player.name}</h4>
-                        <span class="text-xs text-amber-400 font-bold">${(player.money || 10000).toLocaleString()} P</span>
-                    </div>
-                    <div class="grid grid-cols-2 gap-2 mb-3 text-center">
-                        <div class="bg-blue-900/30 p-2 rounded-xl border border-blue-500/30">
-                            <span class="text-xs text-blue-300 block">${matchData.homeTeam || '홈'} 예측</span>
-                            <span class="text-2xl font-black text-white">${player.homePredict || 0}</span>
-                        </div>
-                        <div class="bg-red-900/30 p-2 rounded-xl border border-red-500/30">
-                            <span class="text-xs text-red-300 block">${matchData.awayTeam || '어웨이'} 예측</span>
-                            <span class="text-2xl font-black text-white">${player.awayPredict || 0}</span>
+                        <div class="flex items-center gap-1">
+                            <span class="text-xs text-amber-400 font-bold">보유:</span>
+                            <input type="number" value="${player.money || 10000}" ${player.locked ? 'disabled' : ''} onchange="window.updatePlayerField(${idx}, 'money', this.value)" class="w-20 bg-slate-950 border border-slate-700 rounded px-1.5 py-0.5 text-xs text-amber-300 font-bold text-center">
+                            <span class="text-xs text-amber-400 font-bold">P</span>
                         </div>
                     </div>
-                    <button onclick="window.userBet(${idx})" class="w-full py-2.5 rounded-xl font-bold text-sm bg-amber-500 hover:bg-amber-400 text-slate-950 transition-all">
-                        ${player.locked ? '배팅 수정하기' : '배팅 제출/수정'}
-                    </button>
+
+                    <!-- 홈/어웨이 예측 점수 화살표 조작 박스 -->
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <div class="bg-blue-900/20 border border-blue-500/30 rounded-xl p-3 text-center">
+                            <span class="text-xs font-bold text-blue-300 block mb-2">${matchData.homeTeam || '홈'} 예측</span>
+                            <div class="flex items-center justify-between gap-1">
+                                <button onclick="window.adjustPredict(${idx}, 'homePredict', -1)" ${player.locked ? 'disabled' : ''} class="w-7 h-7 rounded bg-blue-600/50 hover:bg-blue-600 text-white font-bold flex items-center justify-center disabled:opacity-30">-</button>
+                                <input type="number" min="0" value="${player.homePredict || 0}" ${player.locked ? 'disabled' : ''} onchange="window.updatePlayerField(${idx}, 'homePredict', this.value)" class="w-12 bg-slate-950 border border-slate-700 rounded py-1 text-center text-xl font-black text-white">
+                                <button onclick="window.adjustPredict(${idx}, 'homePredict', 1)" ${player.locked ? 'disabled' : ''} class="w-7 h-7 rounded bg-blue-600/50 hover:bg-blue-600 text-white font-bold flex items-center justify-center disabled:opacity-30">+</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-red-900/20 border border-red-500/30 rounded-xl p-3 text-center">
+                            <span class="text-xs font-bold text-red-300 block mb-2">${matchData.awayTeam || '어웨이'} 예측</span>
+                            <div class="flex items-center justify-between gap-1">
+                                <button onclick="window.adjustPredict(${idx}, 'awayPredict', -1)" ${player.locked ? 'disabled' : ''} class="w-7 h-7 rounded bg-red-600/50 hover:bg-red-600 text-white font-bold flex items-center justify-center disabled:opacity-30">-</button>
+                                <input type="number" min="0" value="${player.awayPredict || 0}" ${player.locked ? 'disabled' : ''} onchange="window.updatePlayerField(${idx}, 'awayPredict', this.value)" class="w-12 bg-slate-950 border border-slate-700 rounded py-1 text-center text-xl font-black text-white">
+                                <button onclick="window.adjustPredict(${idx}, 'awayPredict', 1)" ${player.locked ? 'disabled' : ''} class="w-7 h-7 rounded bg-red-600/50 hover:bg-red-600 text-white font-bold flex items-center justify-center disabled:opacity-30">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 배팅 금액 설정 -->
+                    <div class="mb-3 bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="text-slate-300 font-bold">배팅 금액 (P)</span>
+                        </div>
+                        <input type="number" min="1" value="${player.betAmount || 1000}" ${player.locked ? 'disabled' : ''} onchange="window.updatePlayerField(${idx}, 'betAmount', this.value)" class="w-full bg-slate-950 border border-slate-700 rounded-lg py-1.5 px-3 text-sm font-bold text-amber-300 text-center">
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button onclick="window.toggleLock(${idx})" class="w-full py-2 rounded-xl font-bold text-xs ${player.locked ? 'bg-slate-800 text-slate-300 border border-slate-600' : 'bg-amber-500 hover:bg-amber-400 text-slate-950'} transition-all">
+                            ${player.locked ? '배팅 수정하기' : '배팅 확정'}
+                        </button>
+                        <button onclick="window.removePlayer(${idx})" class="px-3 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
                 </div>
             `).join('');
         }
+
+        // 점수 화살표 증감 함수
+        window.adjustPredict = function(idx, field, delta) {
+            let p = matchData.players[idx];
+            if (!p.locked) {
+                p[field] = Math.max(0, (p[field] || 0) + delta);
+                update(matchRef, { players: matchData.players });
+            }
+        };
+
+        // 직접 입력 필드 수정 함수
+        window.updatePlayerField = function(idx, field, val) {
+            let p = matchData.players[idx];
+            if (!p.locked) {
+                let num = parseInt(val, 10);
+                p[field] = isNaN(num) ? 0 : Math.max(0, num);
+                if (field === 'money' && p.betAmount > p.money) p.betAmount = p.money;
+                update(matchRef, { players: matchData.players });
+            }
+        };
+
+        // 배팅 잠금/수정 토글
+        window.toggleLock = function(idx) {
+            let p = matchData.players[idx];
+            p.locked = !p.locked;
+            update(matchRef, { players: matchData.players });
+        };
+
+        // 참여자 삭제
+        window.removePlayer = function(idx) {
+            matchData.players.splice(idx, 1);
+            update(matchRef, { players: matchData.players });
+        };
 
         function renderLeaderboard() {
             const tbody = document.getElementById('leaderboard-table-body');
@@ -361,7 +425,7 @@
             `).join('');
         }
 
-        // 전역 함수 등록 (HTML onclick 버튼 작동용)
+        // 전역 함수 등록 (관리자 설정)
         window.openAdminPanel = function() {
             let inputPw = prompt("관리자 비밀번호를 입력하세요:");
             if (inputPw !== (matchData.adminPassword || "1234")) {
@@ -431,21 +495,6 @@
 
             update(matchRef, { players: matchData.players });
             input.value = '';
-        };
-
-        window.userBet = function(idx) {
-            let p = matchData.players[idx];
-            let h = parseInt(prompt(`${matchData.homeTeam} 예측 점수:`, p.homePredict || 0), 10);
-            let a = parseInt(prompt(`${matchData.awayTeam} 예측 점수:`, p.awayPredict || 0), 10);
-            let bet = parseInt(prompt(`배팅 금액 (보유: ${p.money || 10000}P):`, p.betAmount || 1000), 10);
-
-            if (!isNaN(h) && !isNaN(a) && !isNaN(bet)) {
-                matchData.players[idx].homePredict = h;
-                matchData.players[idx].awayPredict = a;
-                matchData.players[idx].betAmount = Math.min(bet, p.money || 10000);
-                matchData.players[idx].locked = true;
-                update(matchRef, { players: matchData.players });
-            }
         };
 
         window.calculateSettlement = function() {
