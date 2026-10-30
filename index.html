@@ -51,11 +51,11 @@
                         <span class="text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full font-bold">실시간 공유 배팅</span>
                     </h1>
                     <div class="flex items-center gap-2 mt-0.5">
-                        <span id="room-tag" class="text-xs text-amber-300 font-bold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">링크 방 연결 중...</span>
-                        <button onclick="copyShareLink()" class="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold px-2.5 py-0.5 rounded shadow flex items-center gap-1 transition-all">
+                        <button onclick="window.copyShareLink()" class="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold px-2.5 py-0.5 rounded shadow flex items-center gap-1 transition-all">
                             <i class="fa-solid fa-share-nodes"></i> 초대의 링크 복사
                         </button>
-                        <button onclick="openAdminPanel()" class="text-xs bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-bold px-2.5 py-1 rounded transition-all shadow">
+                        <!-- 🛠️ 바로 여기에 관리자 설정 버튼이 있습니다! -->
+                        <button onclick="window.openAdminPanel()" class="text-xs bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-bold px-2 py-0.5 rounded transition-all shadow">
                             <i class="fa-solid fa-key"></i> 관리자 설정
                         </button>
                     </div>
@@ -64,16 +64,16 @@
 
             <!-- Tab Navigation -->
             <nav class="flex space-x-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs sm:text-sm">
-                <button onclick="switchTab('betting')" id="tab-betting" class="px-3 py-1.5 rounded-lg font-bold transition-all duration-200 bg-amber-500 text-slate-950 shadow-md">
+                <button onclick="window.switchTab('betting')" id="tab-betting" class="px-3 py-1.5 rounded-lg font-bold transition-all duration-200 bg-amber-500 text-slate-950 shadow-md">
                     <i class="fa-solid fa-ticket mr-1"></i>배팅 & 현황
                 </button>
-                <button onclick="switchTab('settlement')" id="tab-settlement" class="px-3 py-1.5 rounded-lg font-bold transition-all duration-200 text-slate-300 hover:text-white hover:bg-slate-800">
+                <button onclick="window.switchTab('settlement')" id="tab-settlement" class="px-3 py-1.5 rounded-lg font-bold transition-all duration-200 text-slate-300 hover:text-white hover:bg-slate-800">
                     <i class="fa-solid fa-calculator mr-1"></i>결과 정산
                 </button>
-                <button onclick="switchTab('leaderboard')" id="tab-leaderboard" class="px-3 py-1.5 rounded-lg font-bold transition-all duration-200 text-slate-300 hover:text-white hover:bg-slate-800">
+                <button onclick="window.switchTab('leaderboard')" id="tab-leaderboard" class="px-3 py-1.5 rounded-lg font-bold transition-all duration-200 text-slate-300 hover:text-white hover:bg-slate-800">
                     <i class="fa-solid fa-trophy mr-1"></i>랭킹
                 </button>
-                <button onclick="switchTab('rules')" id="tab-rules" class="px-3 py-1.5 rounded-lg font-bold transition-all duration-200 text-slate-300 hover:text-white hover:bg-slate-800">
+                <button onclick="window.switchTab('rules')" id="tab-rules" class="px-3 py-1.5 rounded-lg font-bold transition-all duration-200 text-slate-300 hover:text-white hover:bg-slate-800">
                     <i class="fa-solid fa-book-open mr-1"></i>규칙
                 </button>
             </nav>
@@ -119,7 +119,7 @@
                             <span class="text-[10px] text-red-300 font-bold mt-1">어웨이 현재</span>
                         </div>
                     </div>
-                    <p class="text-[10px] text-slate-400 mt-2">※ 상단의 [관리자 설정]을 통해 팀, 점수, 이닝을 변경하세요.</p>
+                    <p class="text-[10px] text-slate-400 mt-2">※ 상단의 [관리자 설정]을 통해 10개 구단 및 점수 변경이 가능합니다.</p>
                 </div>
 
                 <!-- Away Team Display -->
@@ -136,17 +136,6 @@
             </div>
         </div>
 
-        <!-- Notification Toast -->
-        <div id="alert-box" class="hidden mb-6 p-4 rounded-xl border flex items-center justify-between transition-all duration-300">
-            <div class="flex items-center gap-3">
-                <i id="alert-icon" class="fa-solid text-lg"></i>
-                <span id="alert-message" class="text-sm font-medium"></span>
-            </div>
-            <button onclick="hideAlert()" class="text-slate-400 hover:text-white">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-
         <!-- TAB 1: BETTING PHASE -->
         <section id="sec-betting" class="space-y-6">
             <div class="flex flex-wrap justify-between items-center gap-4 bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
@@ -157,7 +146,7 @@
                 </div>
                 <div class="flex gap-2 w-full sm:w-auto">
                     <input type="text" id="new-player-name" placeholder="참여자/테이블 이름" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-amber-500 w-full sm:w-48 text-white">
-                    <button onclick="addPlayer()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-colors flex items-center gap-1.5">
+                    <button onclick="window.addPlayer()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-colors flex items-center gap-1.5">
                         <i class="fa-solid fa-user-plus text-amber-400"></i> 추가
                     </button>
                 </div>
@@ -175,22 +164,12 @@
                         <i class="fa-solid fa-flag-checkered text-xl"></i>
                     </div>
                     <h3 class="text-xl font-extrabold text-white">경기 실제 결과 정산</h3>
-                    <p class="text-xs text-slate-400 mt-1">경기가 끝난 후 관리자가 정산 버튼을 누르면 4가지 규칙에 따라 자동 정산됩니다.</p>
+                    <p class="text-xs text-slate-400 mt-1">경기가 끝난 후 상단의 [관리자 설정] 또는 아래 정산 버튼을 통해 정산할 수 있습니다.</p>
                 </div>
 
-                <button onclick="calculateSettlement()" class="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-lg rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2">
+                <button onclick="window.calculateSettlement()" class="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-lg rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-calculator"></i> 경기 결과 정산 실행 (관리자 비번 필요)
                 </button>
-            </div>
-
-            <div id="settlement-results-box" class="hidden glass-panel p-6 rounded-2xl border border-slate-700/60 shadow-xl space-y-4">
-                <div class="flex justify-between items-center border-b border-slate-700/60 pb-3">
-                    <h4 class="font-bold text-lg text-white flex items-center gap-2">
-                        <i class="fa-solid fa-receipt text-amber-400"></i> 정산 결과 상세 내역
-                    </h4>
-                    <span id="settlement-timestamp" class="text-xs text-slate-400"></span>
-                </div>
-                <div id="settlement-details" class="space-y-3 custom-scrollbar max-h-96 overflow-y-auto pr-1"></div>
             </div>
         </section>
 
@@ -204,9 +183,6 @@
                         </h3>
                         <p class="text-xs text-slate-400 mt-1">실시간 자산 현황</p>
                     </div>
-                    <button onclick="resetAllData()" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors">
-                        <i class="fa-solid fa-rotate-right mr-1"></i> 데이터 초기화
-                    </button>
                 </div>
 
                 <div class="overflow-x-auto">
@@ -269,14 +245,6 @@
                         <p class="text-xs text-slate-300 leading-relaxed">오답자 중 점수 차이가 가장 적은 사람에게 배팅금 환급 및 보너스를 지급합니다.</p>
                     </div>
                 </div>
-
-                <div class="p-4 rounded-xl bg-red-500/10 border border-red-500/30">
-                    <div class="flex items-center justify-between mb-1">
-                        <span class="font-bold text-red-400 text-sm">❌ 적중 실패</span>
-                        <span class="bg-red-500/20 text-red-300 text-xs font-black px-2 py-0.5 rounded">배팅금 차감</span>
-                    </div>
-                    <p class="text-xs text-slate-300 leading-relaxed">적중 조건에 들어가지 못한 차순위 오답자는 배팅한 게임머니를 잃게 됩니다.</p>
-                </div>
             </div>
         </section>
 
@@ -287,12 +255,12 @@
         <p>KBO 10개 구단 실시간 공유 승부예측 &bull; Firebase Realtime Sync</p>
     </footer>
 
-    <!-- 🔥 FIREBASE REALTIME ENGINE -->
+    <!-- 🔥 FIREBASE ENGINE & UI CONTROLS -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // ⚠️ [중요] 본인의 파이어베이스 콘솔 설정 정보를 여기에 붙여넣으세요!
+        // ⚠️ [중요] 본인의 Firebase 설정 값으로 채워주세요!
        const firebaseConfig = {
   apiKey: "AIzaSyDPT9oQ4rtVdPjSBY7mzqFQ714CtwKfYHw",
   authDomain: "baseball-368e9.firebaseapp.com",
@@ -320,14 +288,7 @@
             players: []
         };
 
-        // 방 번호(해시) 관리
-        let roomId = window.location.hash.replace('#', '');
-        if (!roomId) {
-            roomId = 'ROOM-' + Math.floor(1000 + Math.random() * 9000);
-            window.location.hash = roomId;
-        }
-
-        // 실시간 동기화
+        // 실시간 Firebase 동기화
         onValue(matchRef, (snapshot) => {
             const data = snapshot.val();
             if (!data) {
@@ -335,7 +296,6 @@
             } else {
                 matchData = data;
                 if (!matchData.players) matchData.players = [];
-                document.getElementById('room-tag').textContent = `방 ID: ${roomId}`;
                 renderScoreboard();
                 renderBettingCards();
                 renderLeaderboard();
@@ -366,7 +326,7 @@
             }
         }
 
-        // 화살표 조작이 가능한 배팅 카드 렌더링
+        // 화살표 버튼으로 예측 점수를 조작하는 카드 UI 렌더링
         window.renderBettingCards = function() {
             const container = document.getElementById('betting-cards-container');
             const badge = document.getElementById('player-count-badge');
@@ -478,7 +438,7 @@
             `).join('');
         }
 
-        // ⚾ [관리자 설정] 10개 구단 및 점수/비밀번호 변경
+        // ⚾ [관리자 설정] 10개 구단 및 점수 변경 패널
         window.openAdminPanel = function() {
             let inputPw = prompt("관리자 비밀번호를 입력하세요:");
             if (inputPw !== (matchData.adminPassword || "1234")) {
@@ -550,7 +510,7 @@
             input.value = '';
         };
 
-        // 📊 정산 로직 (4가지 규칙 적용)
+        // 결과 정산 로직 (4가지 규칙 적용)
         window.calculateSettlement = function() {
             let inputPw = prompt("관리자 비밀번호를 입력하세요:");
             if (inputPw !== (matchData.adminPassword || "1234")) {
@@ -582,80 +542,27 @@
                 if (closest) minDiffId = closest.id;
             }
 
-            let results = processed.map(p => {
+            matchData.players.forEach(p => {
+                const proc = processed.find(x => x.id === p.id);
                 let reward = 0;
-                let outcomeType = '';
-                let badgeClass = '';
-
-                if (p.exactMatch) {
+                if (proc.exactMatch) {
                     reward = Math.round((p.betAmount || 1000) * 3.0);
-                    outcomeType = '🎯 완벽 적중 (3.0배)';
-                    badgeClass = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
-                } else if (p.singleTeamMatch) {
+                } else if (proc.singleTeamMatch) {
                     reward = Math.round((p.betAmount || 1000) * 1.5);
-                    outcomeType = '⚾ 한 팀 맞춤 (1.5배)';
-                    badgeClass = 'bg-blue-500/20 text-blue-300 border-blue-500/30';
-                } else if (p.numberComboMatch) {
+                } else if (proc.numberComboMatch) {
                     reward = Math.round((p.betAmount || 1000) * 1.2);
-                    outcomeType = '🔀 무관 숫자 맞춤 (1.2배)';
-                    badgeClass = 'bg-purple-500/20 text-purple-300 border-purple-500/30';
                 } else if (!hasAnyExactMatch && p.id === minDiffId) {
                     reward = Math.round((p.betAmount || 1000) * 1.1);
-                    outcomeType = '📐 최단 오차 보너스 (1.1배)';
-                    badgeClass = 'bg-amber-500/20 text-amber-300 border-amber-500/30';
                 } else {
                     reward = -(p.betAmount || 1000);
-                    outcomeType = '❌ 적중 실패 (차감)';
-                    badgeClass = 'bg-red-500/20 text-red-300 border-red-500/30';
                 }
-
-                const oldMoney = p.money || 10000;
-                p.money = Math.max(0, oldMoney + reward);
+                p.money = Math.max(0, (p.money || 10000) + reward);
                 p.locked = false;
-
-                return { name: p.name, predict: `${p.homePredict || 0} : ${p.awayPredict || 0}`, betAmount: p.betAmount || 1000, outcomeType, badgeClass, reward, oldMoney, newMoney: p.money };
             });
 
             set(matchRef, matchData);
-
-            const resBox = document.getElementById('settlement-results-box');
-            const resDetails = document.getElementById('settlement-details');
-            document.getElementById('settlement-timestamp').textContent = `정산 시각: ${new Date().toLocaleTimeString()}`;
-
-            resDetails.innerHTML = results.map(r => `
-                <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <span class="font-bold text-white text-base">${r.name}</span>
-                            <span class="text-xs px-2 py-0.5 rounded border ${r.badgeClass} font-semibold">${r.outcomeType}</span>
-                        </div>
-                        <div class="text-xs text-slate-400 mt-1">
-                            예측: <span class="text-amber-300 font-bold">${r.predict}</span> | 배팅: ${r.betAmount.toLocaleString()} P
-                        </div>
-                    </div>
-                    <div class="text-right w-full sm:w-auto">
-                        <div class="font-black text-base ${r.reward >= 0 ? 'text-emerald-400' : 'text-red-400'}">
-                            ${r.reward >= 0 ? '+' + r.reward.toLocaleString() : r.reward.toLocaleString()} P
-                        </div>
-                        <div class="text-[11px] text-slate-500">
-                            보유금: ${r.oldMoney.toLocaleString()} P ➔ <span class="text-slate-200 font-bold">${r.newMoney.toLocaleString()} P</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-
-            resBox.classList.remove('hidden');
             alert("경기 정산이 완료되었습니다!");
             try { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); } catch(e) {}
-        };
-
-        window.resetAllData = function() {
-            if (confirm('모든 참여자의 잔액을 초기화하시겠습니까?')) {
-                matchData.players.forEach(p => { p.money = 10000; p.betAmount = 1000; p.homePredict = 0; p.awayPredict = 0; p.locked = false; });
-                set(matchRef, matchData);
-                document.getElementById('settlement-results-box').classList.add('hidden');
-                alert('데이터가 초기화되었습니다.');
-            }
         };
 
         window.switchTab = function(tabName) {
