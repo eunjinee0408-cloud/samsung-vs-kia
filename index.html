@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>삼성 vs 기아 라이브 승부예측 배팅 게임</title>
+    <title>KBO 라이브 승부예측 배팅 게임</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -19,8 +19,8 @@
                 theme: {
                     extend: {
                         colors: {
-                            samsung: { DEFAULT: '#074CA1', light: '#1E6BD6', dark: '#043472' },
-                            kia: { DEFAULT: '#EA0029', light: '#FF3B5C', dark: '#A8001D' }
+                            homeColor: { DEFAULT: '#074CA1', light: '#1E6BD6' },
+                            awayColor: { DEFAULT: '#EA0029', light: '#FF3B5C' }
                         },
                         fontFamily: { sans: ['Noto Sans KR', 'sans-serif'] }
                     }
@@ -38,76 +38,24 @@
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950">
 
-    <!-- LOBBY OVERLAY (방 생성/입장 전 선택 화면) -->
-    <div id="lobby-screen" class="fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-xl flex items-center justify-center p-4">
-        <div class="glass-panel max-w-md w-full p-6 sm:p-8 rounded-3xl border border-slate-700/80 shadow-2xl text-center space-y-6">
-            <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-samsung to-kia text-white font-black text-3xl shadow-xl">
-                <i class="fa-solid fa-baseball-bat-ball"></i>
-            </div>
-            <div>
-                <h2 class="text-2xl font-black text-white">삼성 vs 기아 라이브 배팅</h2>
-                <p class="text-xs text-slate-400 mt-1">방을 만들어 친구를 초대하거나 기존 방에 입장하세요!</p>
-            </div>
-
-            <!-- TAB CONTROLS FOR LOBBY -->
-            <div class="grid grid-cols-2 bg-slate-900 p-1 rounded-xl border border-slate-800 text-xs font-bold">
-                <button id="lobby-btn-join" onclick="switchLobbyTab('join')" class="py-2.5 rounded-lg bg-amber-500 text-slate-950 shadow">방 입장하기</button>
-                <button id="lobby-btn-create" onclick="switchLobbyTab('create')" class="py-2.5 rounded-lg text-slate-400 hover:text-white">새 방 만들기</button>
-            </div>
-
-            <!-- JOIN ROOM FORM -->
-            <div id="lobby-form-join" class="space-y-4">
-                <div class="text-left">
-                    <label class="block text-xs font-bold text-slate-300 mb-1.5">방 ID (Room Code)</label>
-                    <input type="text" id="input-room-id" placeholder="예: ROOM-1234" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white font-mono focus:outline-none focus:border-amber-500 uppercase">
-                </div>
-                <button onclick="joinRoom()" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-right-to-bracket"></i> 입장하기
-                </button>
-            </div>
-
-            <!-- CREATE ROOM FORM -->
-            <div id="lobby-form-create" class="hidden space-y-4">
-                <div class="text-left">
-                    <label class="block text-xs font-bold text-slate-300 mb-1.5">생성할 방 ID 지정 (영문/숫자)</label>
-                    <input type="text" id="create-room-id" placeholder="예: BASEBALL2024" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white font-mono focus:outline-none focus:border-amber-500 uppercase">
-                </div>
-                <div class="text-left">
-                    <label class="block text-xs font-bold text-slate-300 mb-1.5">시작 게임머니 설정 (P)</label>
-                    <select id="create-room-money" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-amber-400 font-bold focus:outline-none focus:border-amber-500">
-                        <option value="5000">5,000 P</option>
-                        <option value="10000" selected>10,000 P (기본값)</option>
-                        <option value="30000">30,000 P</option>
-                        <option value="50000">50,000 P</option>
-                        <option value="100000">100,000 P (고액 배팅)</option>
-                    </select>
-                </div>
-                <button onclick="createRoom()" class="w-full py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black rounded-xl shadow-lg transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-plus-circle"></i> 방 만들기
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- Header / Navbar -->
     <header class="border-b border-slate-800 bg-slate-950/80 sticky top-0 z-50 backdrop-blur-md">
         <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-samsung to-kia flex items-center justify-center shadow-lg font-black text-xl text-white">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-red-600 flex items-center justify-center shadow-lg font-black text-xl text-white">
                     <i class="fa-solid fa-baseball-bat-ball"></i>
                 </div>
                 <div>
                     <h1 class="font-black text-lg sm:text-xl text-white tracking-tight flex items-center gap-2">
-                        삼성 <span class="text-xs font-bold text-slate-400">vs</span> 기아 
-                        <span class="text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full font-bold">라이브 배팅</span>
+                        <span id="header-home-team">삼성</span> <span class="text-xs font-bold text-slate-400">vs</span> <span id="header-away-team">KIA</span> 
+                        <span class="text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full font-bold">실시간 공유 배팅</span>
                     </h1>
                     <div class="flex items-center gap-2 mt-0.5">
-                        <span id="room-tag" class="text-xs text-amber-300 font-bold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">방 ID: 대기 중...</span>
                         <button onclick="copyShareLink()" class="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold px-2.5 py-0.5 rounded shadow flex items-center gap-1 transition-all">
                             <i class="fa-solid fa-share-nodes"></i> 초대의 링크 복사
                         </button>
-                        <button onclick="exitToLobby()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-2 py-0.5 rounded transition-all">
-                            <i class="fa-solid fa-door-open"></i> 로비
+                        <button onclick="openAdminPanel()" class="text-xs bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-bold px-2 py-0.5 rounded transition-all">
+                            <i class="fa-solid fa-key"></i> 관리자 설정
                         </button>
                     </div>
                 </div>
@@ -136,19 +84,16 @@
 
         <!-- LIVE SCOREBOARD BOARD MODULE -->
         <div class="relative overflow-hidden rounded-2xl mb-8 p-6 glass-panel border border-slate-700/60 shadow-2xl">
-            <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-kia/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="absolute -left-10 -top-10 w-48 h-48 bg-samsung/20 rounded-full blur-3xl pointer-events-none"></div>
-            
             <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-                <!-- Team Samsung -->
+                <!-- Home Team Display -->
                 <div class="flex items-center gap-4 w-full md:w-1/3 justify-start">
-                    <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-samsung flex items-center justify-center text-white font-black text-2xl shadow-lg border border-blue-400/30 shrink-0">
-                        삼
+                    <div id="home-team-badge" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-black text-2xl shadow-lg border border-blue-400/30 shrink-0">
+                        홈
                     </div>
                     <div>
                         <div class="text-xs text-blue-400 font-semibold uppercase tracking-wider">HOME TEAM</div>
-                        <div class="text-xl font-bold text-white">삼성 라이온즈</div>
-                        <div id="samsung-bet-avg" class="text-xs text-slate-400 mt-0.5">예측 평균: - 점</div>
+                        <div id="home-team-name" class="text-xl font-bold text-white">삼성</div>
+                        <div id="home-bet-avg" class="text-xs text-slate-400 mt-0.5">예측 평균: - 점</div>
                     </div>
                 </div>
 
@@ -158,53 +103,33 @@
                         <span class="inline-block px-2.5 py-0.5 bg-red-500/20 text-red-400 border border-red-500/30 rounded-full text-[11px] font-bold animate-pulse">
                             <i class="fa-solid fa-circle text-[7px] mr-1 align-middle"></i>LIVE
                         </span>
-                        <select id="live-inning" onchange="updateLiveGameScore()" class="bg-slate-900 text-xs font-bold text-amber-400 border border-slate-700 rounded-lg px-2 py-0.5 focus:outline-none">
-                            <option value="1회초">1회초</option>
-                            <option value="1회말">1회말</option>
-                            <option value="2회초">2회초</option>
-                            <option value="2회말">2회말</option>
-                            <option value="3회초">3회초</option>
-                            <option value="3회말">3회말</option>
-                            <option value="4회초">4회초</option>
-                            <option value="4회말">4회말</option>
-                            <option value="5회초" selected>5회초</option>
-                            <option value="5회말">5회말</option>
-                            <option value="6회초">6회초</option>
-                            <option value="6회말">6회말</option>
-                            <option value="7회초">7회초</option>
-                            <option value="7회말">7회말</option>
-                            <option value="8회초">8회초</option>
-                            <option value="8회말">8회말</option>
-                            <option value="9회초">9회초</option>
-                            <option value="9회말">9회말</option>
-                            <option value="경기종료">경기종료</option>
-                        </select>
+                        <span id="live-inning-display" class="bg-slate-900 text-xs font-bold text-amber-400 border border-slate-700 rounded-lg px-2 py-0.5">5회초</span>
                     </div>
 
-                    <!-- Live Digital Score Display & Inputs -->
+                    <!-- Live Digital Score Display -->
                     <div class="flex items-center justify-center gap-4">
                         <div class="flex flex-col items-center">
-                            <input type="number" id="live-sam-score" min="0" max="99" value="3" onchange="updateLiveGameScore()" oninput="updateLiveGameScore()" class="w-16 h-14 bg-samsung/20 border-2 border-samsung text-3xl font-black text-center text-blue-200 rounded-xl focus:outline-none focus:border-blue-400">
-                            <span class="text-[10px] text-blue-300 font-bold mt-1">삼성 현재</span>
+                            <div id="live-home-score" class="w-16 h-14 bg-blue-500/20 border-2 border-blue-500 text-3xl font-black flex items-center justify-center text-blue-200 rounded-xl">0</div>
+                            <span class="text-[10px] text-blue-300 font-bold mt-1">홈 현재</span>
                         </div>
                         <span class="text-2xl font-black text-slate-500">:</span>
                         <div class="flex flex-col items-center">
-                            <input type="number" id="live-kia-score" min="0" max="99" value="2" onchange="updateLiveGameScore()" oninput="updateLiveGameScore()" class="w-16 h-14 bg-kia/20 border-2 border-kia text-3xl font-black text-center text-red-200 rounded-xl focus:outline-none focus:border-red-400">
-                            <span class="text-[10px] text-red-300 font-bold mt-1">기아 현재</span>
+                            <div id="live-away-score" class="w-16 h-14 bg-red-500/20 border-2 border-red-500 text-3xl font-black flex items-center justify-center text-red-200 rounded-xl">0</div>
+                            <span class="text-[10px] text-red-300 font-bold mt-1">어웨이 현재</span>
                         </div>
                     </div>
-                    <p class="text-[10px] text-slate-400 mt-2">※ 실시간 점수를 수정하면 각 배팅의 예상 수령액이 자동으로 동기화됩니다.</p>
+                    <p class="text-[10px] text-slate-400 mt-2">※ 관리자가 점수를 변경하면 모든 참여자의 화면이 자동으로 즉시 갱신됩니다.</p>
                 </div>
 
-                <!-- Team KIA -->
+                <!-- Away Team Display -->
                 <div class="flex items-center gap-4 w-full md:w-1/3 justify-end flex-row-reverse md:flex-row">
                     <div class="text-right md:text-left">
                         <div class="text-xs text-red-400 font-semibold uppercase tracking-wider">AWAY TEAM</div>
-                        <div class="text-xl font-bold text-white">기아 타이거즈</div>
-                        <div id="kia-bet-avg" class="text-xs text-slate-400 mt-0.5">예측 평균: - 점</div>
+                        <div id="away-team-name" class="text-xl font-bold text-white">KIA</div>
+                        <div id="away-bet-avg" class="text-xs text-slate-400 mt-0.5">예측 평균: - 점</div>
                     </div>
-                    <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-kia flex items-center justify-center text-white font-black text-2xl shadow-lg border border-red-400/30 shrink-0">
-                        기
+                    <div id="away-team-badge" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-red-600 flex items-center justify-center text-white font-black text-2xl shadow-lg border border-red-400/30 shrink-0">
+                        원
                     </div>
                 </div>
             </div>
@@ -249,34 +174,12 @@
                         <i class="fa-solid fa-flag-checkered text-xl"></i>
                     </div>
                     <h3 class="text-xl font-extrabold text-white">경기 실제 결과 정산</h3>
-                    <p class="text-xs text-slate-400 mt-1">경기가 끝난 후 실제 최종 점수를 입력하면 정산되며, 남은 게임머니는 다음 경기 배팅으로 자동 이월됩니다.</p>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4 my-6">
-                    <div class="bg-samsung/10 border border-samsung/40 rounded-2xl p-4 text-center">
-                        <label class="block text-xs font-bold text-blue-300 mb-2">삼성 최종 점수</label>
-                        <input type="number" id="actual-samsung" min="0" max="99" value="5" class="w-full bg-slate-950 border border-samsung/50 text-3xl font-black text-center text-white rounded-xl py-3 focus:outline-none focus:border-blue-400">
-                    </div>
-
-                    <div class="bg-kia/10 border border-kia/40 rounded-2xl p-4 text-center">
-                        <label class="block text-xs font-bold text-red-300 mb-2">기아 최종 점수</label>
-                        <input type="number" id="actual-kia" min="0" max="99" value="3" class="w-full bg-slate-950 border border-kia/50 text-3xl font-black text-center text-white rounded-xl py-3 focus:outline-none focus:border-red-400">
-                    </div>
+                    <p class="text-xs text-slate-400 mt-1">경기가 끝난 후 관리자가 정산 버튼을 누르면 모든 참여자의 게임머니가 정산됩니다.</p>
                 </div>
 
                 <button onclick="calculateSettlement()" class="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-lg rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-calculator"></i> 경기 결과 정산 및 차기 경기 이월
+                    <i class="fa-solid fa-calculator"></i> 경기 결과 정산 실행 (관리자 비번 필요)
                 </button>
-            </div>
-
-            <div id="settlement-results-box" class="hidden glass-panel p-6 rounded-2xl border border-slate-700/60 shadow-xl space-y-4">
-                <div class="flex justify-between items-center border-b border-slate-700/60 pb-3">
-                    <h4 class="font-bold text-lg text-white flex items-center gap-2">
-                        <i class="fa-solid fa-receipt text-amber-400"></i> 정산 결과 상세 내역
-                    </h4>
-                    <span id="settlement-timestamp" class="text-xs text-slate-400"></span>
-                </div>
-                <div id="settlement-details" class="space-y-3 custom-scrollbar max-h-96 overflow-y-auto pr-1"></div>
             </div>
         </section>
 
@@ -288,11 +191,8 @@
                         <h3 class="text-xl font-extrabold text-white flex items-center gap-2">
                             <i class="fa-solid fa-trophy text-amber-400"></i> 보유 게임머니 누적 순위표
                         </h3>
-                        <p id="leaderboard-sub-desc" class="text-xs text-slate-400 mt-1">방 설정 기준 실시간 자산 현황</p>
+                        <p class="text-xs text-slate-400 mt-1">실시간 자산 현황</p>
                     </div>
-                    <button onclick="resetAllData()" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 px-3 py-1.5 rounded-xl text-xs font-bold transition-colors">
-                        <i class="fa-solid fa-rotate-right mr-1"></i> 데이터 초기화
-                    </button>
                 </div>
 
                 <div class="overflow-x-auto">
@@ -328,7 +228,7 @@
                             <span class="font-bold text-emerald-400 text-sm">🎯 완벽 적중 (Exact Score)</span>
                             <span class="bg-emerald-500/20 text-emerald-300 text-xs font-black px-2 py-0.5 rounded">배팅금 x 3.0</span>
                         </div>
-                        <p class="text-xs text-slate-300 leading-relaxed">삼성과 기아 두 구단의 최종 점수를 모두 맞춘 경우 배팅금의 3배를 받습니다.</p>
+                        <p class="text-xs text-slate-300 leading-relaxed">두 구단의 최종 점수를 모두 맞춘 경우 배팅금의 3배를 받습니다.</p>
                     </div>
 
                     <div class="p-4 rounded-xl bg-blue-500/10 border border-blue-500/30">
@@ -338,30 +238,6 @@
                         </div>
                         <p class="text-xs text-slate-300 leading-relaxed">두 팀 중 한 팀의 점수만 정확히 적중한 경우 1.5배를 지급받습니다.</p>
                     </div>
-
-                    <div class="p-4 rounded-xl bg-purple-500/10 border border-purple-500/30">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="font-bold text-purple-400 text-sm">🔀 무관 숫자 맞춤</span>
-                            <span class="bg-purple-500/20 text-purple-300 text-xs font-black px-2 py-0.5 rounded">배팅금 x 1.2</span>
-                        </div>
-                        <p class="text-xs text-slate-300 leading-relaxed">구단과 상관없이 점수 조합이 일치한 경우 1.2배를 획득합니다.</p>
-                    </div>
-
-                    <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="font-bold text-amber-400 text-sm">📐 최단 오차 근접 보너스</span>
-                            <span class="bg-amber-500/20 text-amber-300 text-xs font-black px-2 py-0.5 rounded">배팅금 환급 + 보너스</span>
-                        </div>
-                        <p class="text-xs text-slate-300 leading-relaxed">오답자 중 점수 차이가 가장 적은 사람에게 배팅금 환급 및 보너스를 지급합니다.</p>
-                    </div>
-                </div>
-
-                <div class="p-4 rounded-xl bg-red-500/10 border border-red-500/30">
-                    <div class="flex items-center justify-between mb-1">
-                        <span class="font-bold text-red-400 text-sm">❌ 적중 실패</span>
-                        <span class="bg-red-500/20 text-red-300 text-xs font-black px-2 py-0.5 rounded">배팅금 차감</span>
-                    </div>
-                    <p class="text-xs text-slate-300 leading-relaxed">적중 조건에 들어가지 못한 차순위 오답자는 배팅한 게임머니를 잃게 됩니다.</p>
                 </div>
             </div>
         </section>
@@ -370,653 +246,245 @@
 
     <!-- Footer -->
     <footer class="border-t border-slate-800 bg-slate-950/60 py-4 text-center text-xs text-slate-500">
-        <p>삼성 라이온즈 vs 기아 타이거즈 친선 승부예측 &bull; 실시간 기기 동기화 모드</p>
+        <p>KBO 10개 구단 실시간 공유 승부예측 &bull; Firebase Realtime Sync</p>
     </footer>
 
-    <!-- Game & Sync Engine -->
-    <script>
-        let initialMoney = 10000;
-        let roomId = '';
-        let syncInterval = null;
+    <!-- 
+      ========================================================================
+      👇 [여기에 붙여넣으세요!] 파이어베이스 SDK 및 자바스크립트 게임 엔진 영역 👇
+      ========================================================================
+    -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        let liveMatch = { samScore: 3, kiaScore: 2, inning: '5회초' };
-        let players = [];
+        // 👉 아래 firebaseConfig 칸에 파이어베이스 콘솔에서 복사한 본인의 열쇠 코드를 넣으세요!
+        const firebaseConfig = {
+          apiKey: "AIzaSyDPT9oQ4rtVdPjSBY7mzqFQ714CtwKfYHw",
+          authDomain: "baseball-368e9.firebaseapp.com",
+          databaseURL: "https://baseball-368e9-default-rtdb.firebaseio.com",
+          projectId: "baseball-368e9",
+          storageBucket: "baseball-368e9.firebasestorage.app",
+          messagingSenderId: "520728823048",
+          appId: "1:520728823048:web:89ba969df6787bdc2bd8bd",
+          measurementId: "G-XM3L46Y85M"
+        };
 
-        // LOBBY CONTROL FUNCTIONS (Fixed ReferenceError)
-        function switchLobbyTab(mode) {
-            const btnJoin = document.getElementById('lobby-btn-join');
-            const btnCreate = document.getElementById('lobby-btn-create');
-            const formJoin = document.getElementById('lobby-form-join');
-            const formCreate = document.getElementById('lobby-form-create');
 
-            if (mode === 'join') {
-                if (btnJoin) btnJoin.className = "py-2.5 rounded-lg bg-amber-500 text-slate-950 shadow";
-                if (btnCreate) btnCreate.className = "py-2.5 rounded-lg text-slate-400 hover:text-white";
-                if (formJoin) formJoin.classList.remove('hidden');
-                if (formCreate) formCreate.classList.add('hidden');
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const matchRef = ref(db, 'liveMatch');
+
+        // KBO 10개 구단 데이터
+        const kboTeams = ["삼성", "KIA", "LG", "두산", "SSG", "KT", "NC", "롯데", "한화", "키움"];
+
+        let matchData = {
+            homeTeam: "삼성",
+            awayTeam: "KIA",
+            homeScore: 0,
+            awayScore: 0,
+            inning: "5회초",
+            adminPassword: "1234",
+            players: []
+        };
+
+        // 실시간 Firebase 동기화 (접속자 모두 동일 화면 반영)
+        onValue(matchRef, (snapshot) => {
+            const data = snapshot.val();
+            if (!data) {
+                set(matchRef, matchData);
             } else {
-                if (btnCreate) btnCreate.className = "py-2.5 rounded-lg bg-amber-500 text-slate-950 shadow";
-                if (btnJoin) btnJoin.className = "py-2.5 rounded-lg text-slate-400 hover:text-white";
-                if (formCreate) formCreate.classList.remove('hidden');
-                if (formJoin) formJoin.classList.add('hidden');
+                matchData = data;
+                if (!matchData.players) matchData.players = [];
+                renderScoreboard();
+                renderBettingCards();
+                renderLeaderboard();
             }
-        }
+        });
 
-        function createRoom() {
-            const rawId = document.getElementById('create-room-id').value.trim();
-            const moneyVal = parseInt(document.getElementById('create-room-money').value, 10);
+        // 스코어보드 UI 업데이트
+        function renderScoreboard() {
+            document.getElementById('header-home-team').innerText = matchData.homeTeam;
+            document.getElementById('header-away-team').innerText = matchData.awayTeam;
+            document.getElementById('home-team-name').innerText = matchData.homeTeam;
+            document.getElementById('away-team-name').innerText = matchData.awayTeam;
+            document.getElementById('home-team-badge').innerText = matchData.homeTeam.substring(0, 1);
+            document.getElementById('away-team-badge').innerText = matchData.awayTeam.substring(0, 1);
             
-            const targetRoomId = rawId ? rawId.toUpperCase() : 'ROOM-' + Math.floor(1000 + Math.random() * 9000);
+            document.getElementById('live-home-score').innerText = matchData.homeScore;
+            document.getElementById('live-away-score').innerText = matchData.awayScore;
+            document.getElementById('live-inning-display').innerText = matchData.inning || "진행 중";
 
-            const existingData = localStorage.getItem(`sam_kia_${targetRoomId}`);
-            if (existingData && rawId) {
-                showAlert(`이미 존재하는 방 ID('${targetRoomId}')입니다. '방 입장하기'를 이용해 주세요!`, 'error');
+            const players = matchData.players || [];
+            if(players.length > 0) {
+                const homeAvg = (players.reduce((sum, p) => sum + (p.homePredict || 0), 0) / players.length).toFixed(1);
+                const awayAvg = (players.reduce((sum, p) => sum + (p.awayPredict || 0), 0) / players.length).toFixed(1);
+                document.getElementById('home-bet-avg').innerText = `예측 평균: ${homeAvg} 점`;
+                document.getElementById('away-bet-avg').innerText = `예측 평균: ${awayAvg} 점`;
+            }
+        }
+
+        // 관리자 제어 패널 (팀 변경, 점수 변경, 비밀번호 검증)
+        window.openAdminPanel = function() {
+            let inputPw = prompt("관리자 비밀번호를 입력하세요:");
+            if (inputPw !== matchData.adminPassword) {
+                alert("비밀번호가 틀렸습니다!");
                 return;
             }
 
-            roomId = targetRoomId;
-            initialMoney = moneyVal || 10000;
+            let choice = prompt(
+                "원하는 관리 작업을 선택하세요:\n" +
+                "1: 홈/어웨이 팀 설정 (10개 구단)\n" +
+                "2: 현재 경기 점수 및 이닝 변경\n" +
+                "3: 관리자 비밀번호 변경", "1"
+            );
 
-            players = [
-                { id: 1, name: '테이블 A', money: initialMoney, betAmount: 2000, samPredict: 5, kiaPredict: 3, locked: false },
-                { id: 2, name: '테이블 B', money: initialMoney, betAmount: 1500, samPredict: 3, kiaPredict: 7, locked: false }
-            ];
-
-            updateUrlWithRoom();
-            enterGameSession();
-            showAlert(`방(${roomId})이 생성되었습니다! 기본금: ${initialMoney.toLocaleString()} P`, 'success');
-        }
-
-        function joinRoom() {
-            const rawId = document.getElementById('input-room-id').value.trim();
-            if (!rawId) {
-                showAlert('입장할 방 ID를 입력해주세요.', 'warning');
-                return;
-            }
-
-            roomId = rawId.toUpperCase();
-            updateUrlWithRoom();
-            loadData();
-
-            const existingData = localStorage.getItem(`sam_kia_${roomId}`);
-            if (!existingData && players.length === 0) {
-                showAlert(`존재하지 않는 방 ID('${roomId}')입니다. 올바른 방 번호를 입력하거나 '방 만들기'를 이용해 주세요.`, 'error');
-                return;
-            }
-
-            if (players.length === 0) {
-                players = [
-                    { id: Date.now(), name: '참여자 1', money: initialMoney, betAmount: 1000, samPredict: 3, kiaPredict: 2, locked: false }
-                ];
-            }
-
-            enterGameSession();
-            showAlert(`${roomId} 방에 입장했습니다.`, 'success');
-        }
-
-        function updateUrlWithRoom() {
-            try {
-                const newUrl = `${window.location.pathname}?room=${roomId}`;
-                window.history.replaceState({ path: newUrl }, '', newUrl);
-            } catch(e) {}
-        }
-
-        function enterGameSession() {
-            document.getElementById('lobby-screen').classList.add('hidden');
-            document.getElementById('room-tag').textContent = `방 ID: ${roomId}`;
-            document.getElementById('leaderboard-sub-desc').textContent = `방 [${roomId}] 설정 기준 실시간 자산 현황`;
-
-            saveData();
-            renderBettingCards();
-            renderLeaderboard();
-            updateAverages();
-
-            if (syncInterval) clearInterval(syncInterval);
-            syncInterval = setInterval(() => loadData(true), 2000);
-        }
-
-        function exitToLobby() {
-            if (syncInterval) clearInterval(syncInterval);
-            document.getElementById('lobby-screen').classList.remove('hidden');
-        }
-
-        // Global Alert Toast
-        function showAlert(msg, type = 'info') {
-            const box = document.getElementById('alert-box');
-            const icon = document.getElementById('alert-icon');
-            const message = document.getElementById('alert-message');
-            if (!box || !icon || !message) return;
-
-            box.className = "mb-6 p-4 rounded-xl border flex items-center justify-between transition-all duration-300 ";
-
-            if (type === 'success') {
-                box.classList.add('bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-300');
-                icon.className = "fa-solid fa-circle-check text-emerald-400 text-lg";
-            } else if (type === 'warning') {
-                box.classList.add('bg-amber-500/10', 'border-amber-500/30', 'text-amber-300');
-                icon.className = "fa-solid fa-triangle-exclamation text-amber-400 text-lg";
-            } else if (type === 'error') {
-                box.classList.add('bg-red-500/10', 'border-red-500/30', 'text-red-300');
-                icon.className = "fa-solid fa-circle-xmark text-red-400 text-lg";
-            } else {
-                box.classList.add('bg-blue-500/10', 'border-blue-500/30', 'text-blue-300');
-                icon.className = "fa-solid fa-circle-info text-blue-400 text-lg";
-            }
-
-            message.textContent = msg;
-            box.classList.remove('hidden');
-            setTimeout(() => hideAlert(), 4000);
-        }
-
-        function hideAlert() {
-            const box = document.getElementById('alert-box');
-            if (box) box.classList.add('hidden');
-        }
-
-        // Share Link Copy
-        function copyShareLink() {
-            const baseUrl = window.location.href.split('?')[0];
-            const shareUrl = `${baseUrl}?room=${roomId}`;
-            
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(shareUrl).then(() => {
-                    showAlert(`[방 ID: ${roomId}] 초대 링크가 복사되었습니다! 카톡으로 공유하세요.`, 'success');
-                }).catch(() => fallbackCopy(shareUrl));
-            } else {
-                fallbackCopy(shareUrl);
-            }
-        }
-
-        function fallbackCopy(text) {
-            const temp = document.createElement('input');
-            document.body.appendChild(temp);
-            temp.value = text;
-            temp.select();
-            document.execCommand('copy');
-            document.body.removeChild(temp);
-            showAlert(`[방 ID: ${roomId}] 초대 링크가 복사되었습니다! 카톡으로 공유하세요.`, 'success');
-        }
-
-        // Tab Switcher
-        function switchTab(tabName) {
-            ['betting', 'settlement', 'leaderboard', 'rules'].forEach(t => {
-                const btn = document.getElementById(`tab-${t}`);
-                const sec = document.getElementById(`sec-${t}`);
-                if (!btn || !sec) return;
-                if (t === tabName) {
-                    btn.className = "px-3 py-1.5 rounded-lg font-bold transition-all duration-200 bg-amber-500 text-slate-950 shadow-md";
-                    sec.classList.remove('hidden');
+            if (choice === "1") {
+                let home = prompt("홈팀 선택 (" + kboTeams.join(", ") + ")", matchData.homeTeam);
+                let away = prompt("어웨이팀 선택 (" + kboTeams.join(", ") + ")", matchData.awayTeam);
+                if (kboTeams.includes(home) && kboTeams.includes(away)) {
+                    update(matchRef, { homeTeam: home, awayTeam: away });
                 } else {
-                    btn.className = "px-3 py-1.5 rounded-lg font-bold transition-all duration-200 text-slate-300 hover:text-white hover:bg-slate-800";
-                    sec.classList.add('hidden');
+                    alert("올바른 구단명을 입력해주세요.");
                 }
-            });
-            if (tabName === 'leaderboard') renderLeaderboard();
-        }
-
-        // Data Storage Engine
-        function saveData() {
-            const payload = { liveMatch, players, initialMoney };
-            localStorage.setItem(`sam_kia_${roomId}`, JSON.stringify(payload));
-
-            fetch(`https://api.jsonbin.io/v3/b/${roomId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }).catch(() => {});
-        }
-
-        function loadData(isBackground = false) {
-            const local = localStorage.getItem(`sam_kia_${roomId}`);
-            if (local) {
-                try {
-                    const parsed = JSON.parse(local);
-                    if (parsed.liveMatch) liveMatch = parsed.liveMatch;
-                    if (parsed.players) players = parsed.players;
-                    if (parsed.initialMoney) initialMoney = parsed.initialMoney;
-
-                    if (isBackground) {
-                        // 현재 입력창에 커서가 있는 중이라면(포커스 상태) 화면을 재렌더링하지 않음 (커서 튕김 방지)
-                        const activeEl = document.activeElement;
-                        const isTyping = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'SELECT');
-                        
-                        if (!isTyping) {
-                            renderBettingCards();
-                            updateAverages();
-                        }
-                    }
-                } catch(e) {}
-            }
-        }
-
-        // Odds Calculation
-        function calculateLiveOdds(player) {
-            const curSam = liveMatch.samScore;
-            const curKia = liveMatch.kiaScore;
-            const predSam = player.samPredict;
-            const predKia = player.kiaPredict;
-            const wager = player.betAmount;
-
-            const reqSam = predSam - curSam;
-            const reqKia = predKia - curKia;
-
-            const exactPayout = Math.round(wager * 3.0);
-            const oneTeamPayout = Math.round(wager * 1.5);
-            const numMatchPayout = Math.round(wager * 1.2);
-            const totalDiff = Math.abs(predSam - curSam) + Math.abs(predKia - curKia);
-
-            let probPercent = 0;
-            let probLabel = "낮음";
-            let probColor = "text-red-400 border-red-500/30 bg-red-500/10";
-
-            if (curSam === predSam && curKia === predKia) {
-                probPercent = 98;
-                probLabel = "현재 완벽 적중 중!";
-                probColor = "text-emerald-300 border-emerald-500/50 bg-emerald-500/20";
-            } else if (reqSam < 0 || reqKia < 0) {
-                probPercent = Math.max(5, 30 - totalDiff * 5);
-                probLabel = "점수 초과";
-                probColor = "text-slate-400 border-slate-700 bg-slate-800/40";
-            } else {
-                const remaining = reqSam + reqKia;
-                if (remaining <= 2) {
-                    probPercent = 75; probLabel = "유력함"; probColor = "text-emerald-400 border-emerald-500/30 bg-emerald-500/10";
-                } else if (remaining <= 5) {
-                    probPercent = 45; probLabel = "보통"; probColor = "text-amber-400 border-amber-500/30 bg-amber-500/10";
-                } else {
-                    probPercent = 20; probLabel = "어려움"; probColor = "text-red-400 border-red-500/30 bg-red-500/10";
+            } else if (choice === "2") {
+                let hScore = parseInt(prompt("홈팀 점수", matchData.homeScore), 10);
+                let aScore = parseInt(prompt("어웨이팀 점수", matchData.awayScore), 10);
+                let inn = prompt("이닝 (예: 5회초, 경기종료)", matchData.inning);
+                if (!isNaN(hScore) && !isNaN(aScore)) {
+                    update(matchRef, { homeScore: hScore, awayScore: aScore, inning: inn });
                 }
+            } else if (choice === "3") {
+                let newPw = prompt("새 관리자 비밀번호를 입력하세요:");
+                if (newPw) update(matchRef, { adminPassword: newPw });
             }
+        };
 
-            return { reqSam, reqKia, exactPayout, oneTeamPayout, numMatchPayout, probPercent, probLabel, probColor };
-        }
-
-        // Render Betting Cards Grid
+        // 참여자 배팅 카드리스트
         function renderBettingCards() {
             const container = document.getElementById('betting-cards-container');
             const badge = document.getElementById('player-count-badge');
-            if (!container) return;
-            if (badge) badge.textContent = `${players.length}명`;
+            const players = matchData.players || [];
+            badge.textContent = `${players.length}명`;
 
             if (players.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-full text-center py-12 glass-panel rounded-2xl border border-slate-800 text-slate-500">
-                        <i class="fa-solid fa-users-slash text-3xl mb-2"></i>
-                        <p>등록된 참여자가 없습니다. 상단에서 테이블을 추가해 주세요!</p>
-                    </div>
-                `;
+                container.innerHTML = `<div class="col-span-full text-center py-12 glass-panel rounded-2xl text-slate-500">참여자가 없습니다. 상단에서 추가해주세요!</div>`;
                 return;
             }
 
-            container.innerHTML = players.map(player => {
-                const odds = calculateLiveOdds(player);
-
-                return `
-                <div class="glass-panel rounded-2xl p-5 border transition-all duration-300 relative overflow-hidden flex flex-col justify-between ${player.locked ? 'border-amber-500/50 bg-slate-900/90' : 'border-slate-700/60 hover:border-slate-600'}">
-                    ${player.locked ? `
-                        <div class="absolute top-0 right-0 bg-amber-500 text-slate-950 text-[10px] font-black px-3 py-1 rounded-bl-xl uppercase tracking-wider flex items-center gap-1">
-                            <i class="fa-solid fa-lock"></i> 배팅 확정됨
+            container.innerHTML = players.map((player, idx) => `
+                <div class="glass-panel rounded-2xl p-5 border ${player.locked ? 'border-amber-500/50 bg-slate-900/90' : 'border-slate-700/60'}">
+                    <div class="flex justify-between items-center mb-3">
+                        <h4 class="font-bold text-lg text-white">${player.name}</h4>
+                        <span class="text-xs text-amber-400 font-bold">${player.money.toLocaleString()} P</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 mb-3 text-center">
+                        <div class="bg-blue-900/30 p-2 rounded-xl border border-blue-500/30">
+                            <span class="text-xs text-blue-300 block">${matchData.homeTeam} 예측</span>
+                            <span class="text-2xl font-black text-white">${player.homePredict || 0}</span>
                         </div>
-                    ` : ''}
-
-                    <div>
-                        <div class="flex justify-between items-start mb-3">
-                            <div>
-                                <h4 class="font-bold text-lg text-white flex items-center gap-2">${player.name}</h4>
-                                <div class="text-xs text-amber-400 font-bold mt-1 flex items-center gap-1">
-                                    <i class="fa-solid fa-coins"></i> 보유금:
-                                    <input type="number" min="0" value="${player.money}" 
-                                        ${player.locked ? 'disabled' : ''} 
-                                        onchange="updatePlayerBet(${player.id}, 'money', this.value)"
-                                        class="w-24 bg-slate-950 border border-slate-700 rounded px-1.5 py-0.5 text-xs text-amber-300 font-bold focus:outline-none focus:border-amber-500 disabled:opacity-60">
-                                    <span>P</span>
-                                </div>
-                            </div>
-                            ${!player.locked ? `
-                                <button onclick="removePlayer(${player.id})" class="text-slate-500 hover:text-red-400 p-1 text-sm transition-colors" title="삭제">
-                                    <i class="fa-solid fa-trash-can"></i>
-                                </button>
-                            ` : ''}
-                        </div>
-
-                        <!-- Predict Controls -->
-                        <div class="grid grid-cols-2 gap-3 mb-3">
-                            <div class="bg-samsung/10 border border-samsung/30 rounded-xl p-3">
-                                <span class="block text-xs font-bold text-blue-300 mb-2 text-center">삼성 예측 점수</span>
-                                <div class="flex items-center justify-between gap-1">
-                                    <button onclick="adjustPredict(${player.id}, 'samPredict', -1)" ${player.locked ? 'disabled' : ''} class="w-8 h-8 rounded-lg bg-samsung/40 hover:bg-samsung text-white font-black text-lg flex items-center justify-center disabled:opacity-30 active:scale-95 transition-all">-</button>
-                                    <input type="number" min="0" max="99" value="${player.samPredict}" 
-                                        ${player.locked ? 'disabled' : ''} 
-                                        onchange="updatePlayerBet(${player.id}, 'samPredict', this.value)"
-                                        class="w-14 bg-slate-950 border border-slate-700 rounded-lg py-1 text-center text-2xl font-black text-white focus:outline-none focus:border-blue-400 disabled:opacity-60">
-                                    <button onclick="adjustPredict(${player.id}, 'samPredict', 1)" ${player.locked ? 'disabled' : ''} class="w-8 h-8 rounded-lg bg-samsung/40 hover:bg-samsung text-white font-black text-lg flex items-center justify-center disabled:opacity-30 active:scale-95 transition-all">+</button>
-                                </div>
-                            </div>
-
-                            <div class="bg-kia/10 border border-kia/30 rounded-xl p-3">
-                                <span class="block text-xs font-bold text-red-300 mb-2 text-center">기아 예측 점수</span>
-                                <div class="flex items-center justify-between gap-1">
-                                    <button onclick="adjustPredict(${player.id}, 'kiaPredict', -1)" ${player.locked ? 'disabled' : ''} class="w-8 h-8 rounded-lg bg-kia/40 hover:bg-kia text-white font-black text-lg flex items-center justify-center disabled:opacity-30 active:scale-95 transition-all">-</button>
-                                    <input type="number" min="0" max="99" value="${player.kiaPredict}" 
-                                        ${player.locked ? 'disabled' : ''} 
-                                        onchange="updatePlayerBet(${player.id}, 'kiaPredict', this.value)"
-                                        class="w-14 bg-slate-950 border border-slate-700 rounded-lg py-1 text-center text-2xl font-black text-white focus:outline-none focus:border-red-400 disabled:opacity-60">
-                                    <button onclick="adjustPredict(${player.id}, 'kiaPredict', 1)" ${player.locked ? 'disabled' : ''} class="w-8 h-8 rounded-lg bg-kia/40 hover:bg-kia text-white font-black text-lg flex items-center justify-center disabled:opacity-30 active:scale-95 transition-all">+</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Bet Amount -->
-                        <div class="mb-4 bg-slate-900/60 p-3 rounded-xl border border-slate-800">
-                            <div class="flex justify-between text-xs mb-1.5">
-                                <span class="text-slate-300 font-bold">배팅 금액 (P)</span>
-                                <button onclick="setMaxBet(${player.id})" ${player.locked ? 'disabled' : ''} class="text-amber-400 text-[11px] font-bold underline hover:text-amber-300 disabled:opacity-50">전액 배팅</button>
-                            </div>
-                            <div class="relative flex items-center gap-2">
-                                <input type="number" min="1" max="${player.money}" value="${player.betAmount}" 
-                                    ${player.locked ? 'disabled' : ''} 
-                                    onchange="updatePlayerBet(${player.id}, 'betAmount', this.value)"
-                                    class="w-full bg-slate-950 border border-slate-700 rounded-xl py-2 pl-3 pr-8 text-base font-black text-amber-300 focus:outline-none focus:border-amber-500 disabled:opacity-60">
-                                <span class="absolute right-3 top-2.5 text-xs text-slate-500 font-bold">P</span>
-                            </div>
-                        </div>
-
-                        <!-- Odds Breakdown -->
-                        <div class="bg-slate-950/70 border border-slate-800 rounded-xl p-3 mb-4 space-y-2">
-                            <div class="flex justify-between items-center text-xs pb-2 border-b border-slate-800">
-                                <span class="text-slate-400 font-semibold flex items-center gap-1">
-                                    <i class="fa-solid fa-calculator text-amber-400"></i> 실시간 예상 배당
-                                </span>
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${odds.probColor}">
-                                    ${odds.probLabel} (${odds.probPercent}%)
-                                </span>
-                            </div>
-
-                            <div class="text-[11px] text-slate-300 flex justify-between pt-1">
-                                <span>필요 추가 득점:</span>
-                                <span class="font-bold">
-                                    삼성 <span class="${odds.reqSam < 0 ? 'text-red-400' : 'text-blue-300'}">${odds.reqSam >= 0 ? '+' + odds.reqSam : odds.reqSam}</span> / 
-                                    기아 <span class="${odds.reqKia < 0 ? 'text-red-400' : 'text-red-300'}">${odds.reqKia >= 0 ? '+' + odds.reqKia : odds.reqKia}</span>
-                                </span>
-                            </div>
-
-                            <div class="space-y-1 text-[11px] pt-1">
-                                <div class="flex justify-between items-center bg-slate-900/60 p-1.5 rounded-lg">
-                                    <span class="text-emerald-400 font-medium">🎯 완벽 적중 (3.0x)</span>
-                                    <span class="font-black text-emerald-300">+${odds.exactPayout.toLocaleString()} P</span>
-                                </div>
-                                <div class="flex justify-between items-center bg-slate-900/60 p-1.5 rounded-lg">
-                                    <span class="text-blue-400 font-medium">⚾ 한 팀 맞춤 (1.5x)</span>
-                                    <span class="font-bold text-blue-200">+${odds.oneTeamPayout.toLocaleString()} P</span>
-                                </div>
-                                <div class="flex justify-between items-center bg-slate-900/60 p-1.5 rounded-lg">
-                                    <span class="text-purple-400 font-medium">🔀 숫자 맞춤 (1.2x)</span>
-                                    <span class="font-bold text-purple-200">+${odds.numMatchPayout.toLocaleString()} P</span>
-                                </div>
-                            </div>
+                        <div class="bg-red-900/30 p-2 rounded-xl border border-red-500/30">
+                            <span class="text-xs text-red-300 block">${matchData.awayTeam} 예측</span>
+                            <span class="text-2xl font-black text-white">${player.awayPredict || 0}</span>
                         </div>
                     </div>
-
-                    <button onclick="toggleLock(${player.id})" 
-                        class="w-full py-2.5 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 ${
-                            player.locked 
-                            ? 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600' 
-                            : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 shadow-md shadow-amber-500/10'
-                        }">
-                        <i class="fa-solid ${player.locked ? 'fa-pen-to-square' : 'fa-check'}"></i>
-                        ${player.locked ? '배팅 수정' : '배팅 확정'}
+                    <button onclick="window.userBet(${idx})" class="w-full py-2.5 rounded-xl font-bold text-sm bg-amber-500 hover:bg-amber-400 text-slate-950">
+                        ${player.locked ? '배팅 수정' : '배팅 제출/수정'}
                     </button>
                 </div>
-            `;
-            }).join('');
+            `).join('');
         }
 
-        function adjustPredict(id, field, delta) {
-            const player = players.find(p => p.id === id);
-            if (player && !player.locked) {
-                player[field] = Math.max(0, (player[field] || 0) + delta);
-                saveData();
-                renderBettingCards();
-                updateAverages();
+        // 배팅 입력/수정
+        window.userBet = function(idx) {
+            let p = matchData.players[idx];
+            let h = parseInt(prompt(`${matchData.homeTeam} 예측 점수:`, p.homePredict || 0), 10);
+            let a = parseInt(prompt(`${matchData.awayTeam} 예측 점수:`, p.awayPredict || 0), 10);
+            let bet = parseInt(prompt(`배팅 금액 (보유: ${p.money}P):`, p.betAmount || 1000), 10);
+
+            if (!isNaN(h) && !isNaN(a) && !isNaN(bet)) {
+                matchData.players[idx].homePredict = h;
+                matchData.players[idx].awayPredict = a;
+                matchData.players[idx].betAmount = Math.min(bet, p.money);
+                matchData.players[idx].locked = true;
+                update(matchRef, { players: matchData.players });
             }
-        }
+        };
 
-        function addPlayer() {
+        // 참여자 추가
+        window.addPlayer = function() {
             const input = document.getElementById('new-player-name');
-            const name = input ? input.value.trim() : '';
-            if (!name) { showAlert('참여자 이름을 입력하세요.', 'warning'); return; }
+            const name = input.value.trim();
+            if (!name) return;
 
-            players.push({
-                id: Date.now(),
+            if (!matchData.players) matchData.players = [];
+            matchData.players.push({
                 name: name,
-                money: initialMoney,
+                money: 10000,
                 betAmount: 1000,
-                samPredict: 0,
-                kiaPredict: 0,
+                homePredict: 0,
+                awayPredict: 0,
                 locked: false
             });
 
-            if (input) input.value = '';
-            saveData();
-            renderBettingCards();
-            updateAverages();
-            showAlert(`${name} 님이 추가되었습니다. (시작금: ${initialMoney.toLocaleString()} P)`, 'success');
-        }
+            update(matchRef, { players: matchData.players });
+            input.value = '';
+        };
 
-        function removePlayer(id) {
-            players = players.filter(p => p.id !== id);
-            saveData();
-            renderBettingCards();
-            updateAverages();
-        }
-
-        function setMaxBet(id) {
-            const player = players.find(p => p.id === id);
-            if (player && !player.locked) {
-                player.betAmount = player.money;
-                saveData();
-                renderBettingCards();
-            }
-        }
-
-        function updatePlayerBet(id, field, val) {
-            const player = players.find(p => p.id === id);
-            if (!player || player.locked) return;
-
-            let numVal = parseInt(val, 10);
-            if (isNaN(numVal) || numVal < 0) numVal = 0;
-
-            if (field === 'betAmount') {
-                player.betAmount = Math.min(numVal, player.money);
-            } else if (field === 'money') {
-                player.money = numVal;
-                if (player.betAmount > player.money) player.betAmount = player.money;
-            } else {
-                player[field] = numVal;
-            }
-
-            saveData();
-            renderBettingCards();
-            updateAverages();
-        }
-
-        function toggleLock(id) {
-            const player = players.find(p => p.id === id);
-            if (!player) return;
-
-            if (!player.locked) {
-                if (player.betAmount <= 0) { showAlert('배팅 금액은 1 P 이상이어야 합니다.', 'warning'); return; }
-                if (player.betAmount > player.money) { showAlert('보유 머니보다 크게 배팅할 수 없습니다.', 'error'); return; }
-                player.locked = true;
-                showAlert(`${player.name} 님의 배팅이 확정되었습니다.`, 'success');
-            } else {
-                player.locked = false;
-            }
-
-            saveData();
-            renderBettingCards();
-        }
-
-        function updateLiveGameScore() {
-            const samVal = parseInt(document.getElementById('live-sam-score').value, 10);
-            const kiaVal = parseInt(document.getElementById('live-kia-score').value, 10);
-            const inningVal = document.getElementById('live-inning').value;
-
-            liveMatch.samScore = isNaN(samVal) ? 0 : samVal;
-            liveMatch.kiaScore = isNaN(kiaVal) ? 0 : kiaVal;
-            liveMatch.inning = inningVal;
-
-            saveData();
-            renderBettingCards();
-        }
-
-        function updateAverages() {
-            const samEl = document.getElementById('samsung-bet-avg');
-            const kiaEl = document.getElementById('kia-bet-avg');
-            if (!samEl || !kiaEl) return;
-
-            if (players.length === 0) {
-                samEl.textContent = '예측 평균: - 점';
-                kiaEl.textContent = '예측 평균: - 점';
-                return;
-            }
-
-            const totalSam = players.reduce((sum, p) => sum + p.samPredict, 0);
-            const totalKia = players.reduce((sum, p) => sum + p.kiaPredict, 0);
-
-            samEl.textContent = `예측 평균: ${(totalSam / players.length).toFixed(1)} 점`;
-            kiaEl.textContent = `예측 평균: ${(totalKia / players.length).toFixed(1)} 점`;
-        }
-
+        // 랭킹 렌더링
         function renderLeaderboard() {
             const tbody = document.getElementById('leaderboard-table-body');
-            if (!tbody) return;
-            const sorted = [...players].sort((a, b) => b.money - a.money);
+            const players = [...(matchData.players || [])].sort((a,b) => b.money - a.money);
 
-            if (sorted.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-500">참여자가 없습니다.</td></tr>`;
+            tbody.innerHTML = players.map((p, i) => `
+                <tr class="hover:bg-slate-800/40">
+                    <td class="py-3 px-4 font-bold text-amber-400">${i + 1}위</td>
+                    <td class="py-3 px-4 font-bold text-white">${p.name}</td>
+                    <td class="py-3 px-4 text-center">${p.homePredict || 0} : ${p.awayPredict || 0}</td>
+                    <td class="py-3 px-4 text-center text-amber-400">${(p.betAmount || 0).toLocaleString()} P</td>
+                    <td class="py-3 px-4 text-right font-black text-emerald-400">${p.money.toLocaleString()} P</td>
+                </tr>
+            `).join('');
+        }
+
+        // 결과 정산
+        window.calculateSettlement = function() {
+            let inputPw = prompt("관리자 비밀번호를 입력하세요:");
+            if (inputPw !== matchData.adminPassword) {
+                alert("비밀번호가 틀렸습니다!");
                 return;
             }
 
-            tbody.innerHTML = sorted.map((p, index) => {
-                let rankBadge = `<span class="font-bold text-slate-400">${index + 1}위</span>`;
-                if (index === 0) rankBadge = `<span class="bg-amber-500 text-slate-950 font-black px-2 py-0.5 rounded text-xs shadow-md"><i class="fa-solid fa-crown mr-1"></i>1위</span>`;
-                else if (index === 1) rankBadge = `<span class="bg-slate-300 text-slate-950 font-bold px-2 py-0.5 rounded text-xs">2위</span>`;
-                else if (index === 2) rankBadge = `<span class="bg-amber-700/80 text-amber-200 font-bold px-2 py-0.5 rounded text-xs">3위</span>`;
+            const actH = matchData.homeScore;
+            const actA = matchData.awayScore;
 
-                return `
-                    <tr class="hover:bg-slate-800/40 transition-colors">
-                        <td class="py-3 px-4">${rankBadge}</td>
-                        <td class="py-3 px-4 font-bold text-white">${p.name}</td>
-                        <td class="py-3 px-4 text-center text-slate-300">${p.samPredict} : ${p.kiaPredict}</td>
-                        <td class="py-3 px-4 text-center text-amber-400 font-medium">${p.betAmount.toLocaleString()} P</td>
-                        <td class="py-3 px-4 text-right font-black text-emerald-400 text-base">${p.money.toLocaleString()} P</td>
-                    </tr>
-                `;
-            }).join('');
-        }
-
-        function calculateSettlement() {
-            const actSam = parseInt(document.getElementById('actual-samsung').value, 10);
-            const actKia = parseInt(document.getElementById('actual-kia').value, 10);
-
-            if (isNaN(actSam) || isNaN(actKia)) { showAlert('실제 스코어를 입력하세요.', 'warning'); return; }
-            if (players.length === 0) { showAlert('정산할 참여자가 없습니다.', 'warning'); return; }
-
-            const processed = players.map(p => {
-                const totalDiff = Math.abs(p.samPredict - actSam) + Math.abs(p.kiaPredict - actKia);
-                const exactMatch = (p.samPredict === actSam && p.kiaPredict === actKia);
-                const singleTeamMatch = !exactMatch && (p.samPredict === actSam || p.kiaPredict === actKia);
-                const numberComboMatch = !exactMatch && !singleTeamMatch && ((p.samPredict === actKia && p.kiaPredict === actSam));
-                return { ...p, totalDiff, exactMatch, singleTeamMatch, numberComboMatch };
-            });
-
-            const hasAnyExactMatch = processed.some(p => p.exactMatch);
-
-            let minDiffId = null;
-            if (!hasAnyExactMatch) {
-                const minDiff = Math.min(...processed.map(p => p.totalDiff));
-                const closestPlayer = processed.find(p => p.totalDiff === minDiff);
-                if (closestPlayer) minDiffId = closestPlayer.id;
-            }
-
-            const results = processed.map(p => {
-                let reward = 0;
-                let outcomeType = '';
-                let badgeClass = '';
-
-                if (p.exactMatch) {
-                    reward = Math.round(p.betAmount * 3.0); outcomeType = '🎯 완벽 적중 (3.0배)'; badgeClass = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
-                } else if (p.singleTeamMatch) {
-                    reward = Math.round(p.betAmount * 1.5); outcomeType = '⚾ 한 팀 맞춤 (1.5배)'; badgeClass = 'bg-blue-500/20 text-blue-300 border-blue-500/30';
-                } else if (p.numberComboMatch) {
-                    reward = Math.round(p.betAmount * 1.2); outcomeType = '🔀 무관 숫자 맞춤 (1.2배)'; badgeClass = 'bg-purple-500/20 text-purple-300 border-purple-500/30';
-                } else if (!hasAnyExactMatch && p.id === minDiffId) {
-                    reward = Math.round(p.betAmount * 1.1); outcomeType = '📐 최단 오차 보너스 (1.1배)'; badgeClass = 'bg-amber-500/20 text-amber-300 border-amber-500/30';
+            matchData.players.forEach(p => {
+                if (p.homePredict === actH && p.awayPredict === actA) {
+                    p.money += (p.betAmount * 2); 
                 } else {
-                    reward = -p.betAmount; outcomeType = '❌ 적중 실패 (차감)'; badgeClass = 'bg-red-500/20 text-red-300 border-red-500/30';
+                    p.money -= p.betAmount; 
                 }
-
-                const oldMoney = p.money;
-                const newMoney = Math.max(0, oldMoney + reward);
-                const target = players.find(item => item.id === p.id);
-                if (target) { target.money = newMoney; target.locked = false; }
-
-                return { name: p.name, predict: `${p.samPredict} : ${p.kiaPredict}`, betAmount: p.betAmount, outcomeType, badgeClass, reward, oldMoney, newMoney };
+                p.locked = false;
             });
 
-            saveData();
-            renderBettingCards();
-            renderLeaderboard();
-
-            const resBox = document.getElementById('settlement-results-box');
-            const resDetails = document.getElementById('settlement-details');
-            document.getElementById('settlement-timestamp').textContent = `정산 시각: ${new Date().toLocaleTimeString()}`;
-
-            resDetails.innerHTML = results.map(r => `
-                <div class="p-3 bg-slate-900/80 rounded-xl border border-slate-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <span class="font-bold text-white text-base">${r.name}</span>
-                            <span class="text-xs px-2 py-0.5 rounded border ${r.badgeClass} font-semibold">${r.outcomeType}</span>
-                        </div>
-                        <div class="text-xs text-slate-400 mt-1">
-                            예측: <span class="text-amber-300 font-bold">${r.predict}</span> | 배팅: ${r.betAmount.toLocaleString()} P
-                        </div>
-                    </div>
-                    <div class="text-right w-full sm:w-auto">
-                        <div class="font-black text-base ${r.reward >= 0 ? 'text-emerald-400' : 'text-red-400'}">
-                            ${r.reward >= 0 ? '+' + r.reward.toLocaleString() : r.reward.toLocaleString()} P
-                        </div>
-                        <div class="text-[11px] text-slate-500">
-                            보유금: ${r.oldMoney.toLocaleString()} P ➔ <span class="text-slate-200 font-bold">${r.newMoney.toLocaleString()} P</span>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-
-            resBox.classList.remove('hidden');
-            showAlert('경기 정산이 완료되었습니다! 남은 잔액은 다음 경기로 이월됩니다.', 'success');
+            update(matchRef, { players: matchData.players });
+            alert("정산이 완료되었습니다!");
             try { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); } catch(e) {}
-        }
+        };
 
-        function resetAllData() {
-            players.forEach(p => { p.money = initialMoney; p.betAmount = 1000; p.samPredict = 0; p.kiaPredict = 0; p.locked = false; });
-            saveData();
-            renderBettingCards();
-            renderLeaderboard();
-            updateAverages();
-            document.getElementById('settlement-results-box').classList.add('hidden');
-            showAlert(`전체 게임머니가 시작 기본금(${initialMoney.toLocaleString()} P)으로 초기화되었습니다.`, 'info');
-        }
+        // 탭 전환 & 링크 복사
+        window.switchTab = function(tabName) {
+            ['betting', 'settlement', 'leaderboard', 'rules'].forEach(t => {
+                document.getElementById(`tab-${t}`).className = (t === tabName) 
+                    ? "px-3 py-1.5 rounded-lg font-bold bg-amber-500 text-slate-950 shadow-md"
+                    : "px-3 py-1.5 rounded-lg font-bold text-slate-300 hover:text-white hover:bg-slate-800";
+                document.getElementById(`sec-${t}`).classList.toggle('hidden', t !== tabName);
+            });
+        };
 
-        window.onload = function() {
-            const params = new URLSearchParams(window.location.search);
-            const queryRoom = params.get('room');
-            if (queryRoom) {
-                document.getElementById('input-room-id').value = queryRoom;
-                joinRoom();
-            }
+        window.copyShareLink = function() {
+            navigator.clipboard.writeText(window.location.href);
+            alert("공유 링크가 복사되었습니다!");
         };
     </script>
 </body>
