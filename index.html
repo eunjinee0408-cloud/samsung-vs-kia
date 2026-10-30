@@ -576,8 +576,14 @@
                     if (parsed.initialMoney) initialMoney = parsed.initialMoney;
 
                     if (isBackground) {
-                        renderBettingCards();
-                        updateAverages();
+                        // 현재 입력창에 커서가 있는 중이라면(포커스 상태) 화면을 재렌더링하지 않음 (커서 튕김 방지)
+                        const activeEl = document.activeElement;
+                        const isTyping = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'SELECT');
+                        
+                        if (!isTyping) {
+                            renderBettingCards();
+                            updateAverages();
+                        }
                     }
                 } catch(e) {}
             }
