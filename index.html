@@ -51,10 +51,10 @@
                         <span class="text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-full font-bold">실시간 공유 배팅</span>
                     </h1>
                     <div class="flex items-center gap-2 mt-0.5">
-                        <button onclick="copyShareLink()" class="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold px-2.5 py-0.5 rounded shadow flex items-center gap-1 transition-all">
+                        <button onclick="window.copyShareLink()" class="text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold px-2.5 py-0.5 rounded shadow flex items-center gap-1 transition-all">
                             <i class="fa-solid fa-share-nodes"></i> 초대의 링크 복사
                         </button>
-                        <button onclick="openAdminPanel()" class="text-xs bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-bold px-2 py-0.5 rounded transition-all">
+                        <button onclick="window.openAdminPanel()" class="text-xs bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/30 font-bold px-2 py-0.5 rounded transition-all">
                             <i class="fa-solid fa-key"></i> 관리자 설정
                         </button>
                     </div>
@@ -63,16 +63,16 @@
 
             <!-- Tab Navigation -->
             <nav class="flex space-x-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 text-xs sm:text-sm">
-                <button onclick="switchTab('betting')" id="tab-betting" class="px-3 py-1.5 rounded-lg font-bold transition-all duration-200 bg-amber-500 text-slate-950 shadow-md">
+                <button onclick="window.switchTab('betting')" id="tab-betting" class="px-3 py-1.5 rounded-lg font-bold transition-all duration-200 bg-amber-500 text-slate-950 shadow-md">
                     <i class="fa-solid fa-ticket mr-1"></i>배팅 & 현황
                 </button>
-                <button onclick="switchTab('settlement')" id="tab-settlement" class="px-3 py-1.5 rounded-lg font-bold transition-all duration-200 text-slate-300 hover:text-white hover:bg-slate-800">
+                <button onclick="window.switchTab('settlement')" id="tab-settlement" class="px-3 py-1.5 rounded-lg font-bold transition-all duration-200 text-slate-300 hover:text-white hover:bg-slate-800">
                     <i class="fa-solid fa-calculator mr-1"></i>결과 정산
                 </button>
-                <button onclick="switchTab('leaderboard')" id="tab-leaderboard" class="px-3 py-1.5 rounded-lg font-bold transition-all duration-200 text-slate-300 hover:text-white hover:bg-slate-800">
+                <button onclick="window.switchTab('leaderboard')" id="tab-leaderboard" class="px-3 py-1.5 rounded-lg font-bold transition-all duration-200 text-slate-300 hover:text-white hover:bg-slate-800">
                     <i class="fa-solid fa-trophy mr-1"></i>랭킹
                 </button>
-                <button onclick="switchTab('rules')" id="tab-rules" class="px-3 py-1.5 rounded-lg font-bold transition-all duration-200 text-slate-300 hover:text-white hover:bg-slate-800">
+                <button onclick="window.switchTab('rules')" id="tab-rules" class="px-3 py-1.5 rounded-lg font-bold transition-all duration-200 text-slate-300 hover:text-white hover:bg-slate-800">
                     <i class="fa-solid fa-book-open mr-1"></i>규칙
                 </button>
             </nav>
@@ -88,7 +88,7 @@
                 <!-- Home Team Display -->
                 <div class="flex items-center gap-4 w-full md:w-1/3 justify-start">
                     <div id="home-team-badge" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-black text-2xl shadow-lg border border-blue-400/30 shrink-0">
-                        홈
+                        삼
                     </div>
                     <div>
                         <div class="text-xs text-blue-400 font-semibold uppercase tracking-wider">HOME TEAM</div>
@@ -129,21 +129,10 @@
                         <div id="away-bet-avg" class="text-xs text-slate-400 mt-0.5">예측 평균: - 점</div>
                     </div>
                     <div id="away-team-badge" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-red-600 flex items-center justify-center text-white font-black text-2xl shadow-lg border border-red-400/30 shrink-0">
-                        원
+                        기
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Notification Toast -->
-        <div id="alert-box" class="hidden mb-6 p-4 rounded-xl border flex items-center justify-between transition-all duration-300">
-            <div class="flex items-center gap-3">
-                <i id="alert-icon" class="fa-solid text-lg"></i>
-                <span id="alert-message" class="text-sm font-medium"></span>
-            </div>
-            <button onclick="hideAlert()" class="text-slate-400 hover:text-white">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
         </div>
 
         <!-- TAB 1: BETTING PHASE -->
@@ -156,7 +145,7 @@
                 </div>
                 <div class="flex gap-2 w-full sm:w-auto">
                     <input type="text" id="new-player-name" placeholder="참여자/테이블 이름" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-amber-500 w-full sm:w-48 text-white">
-                    <button onclick="addPlayer()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-colors flex items-center gap-1.5">
+                    <button onclick="window.addPlayer()" class="bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-200 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-colors flex items-center gap-1.5">
                         <i class="fa-solid fa-user-plus text-amber-400"></i> 추가
                     </button>
                 </div>
@@ -177,7 +166,7 @@
                     <p class="text-xs text-slate-400 mt-1">경기가 끝난 후 관리자가 정산 버튼을 누르면 모든 참여자의 게임머니가 정산됩니다.</p>
                 </div>
 
-                <button onclick="calculateSettlement()" class="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-lg rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2">
+                <button onclick="window.calculateSettlement()" class="w-full py-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-lg rounded-xl shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2">
                     <i class="fa-solid fa-calculator"></i> 경기 결과 정산 실행 (관리자 비번 필요)
                 </button>
             </div>
@@ -249,19 +238,14 @@
         <p>KBO 10개 구단 실시간 공유 승부예측 &bull; Firebase Realtime Sync</p>
     </footer>
 
-<!-- 
-      ========================================================================
-      🔥 파이어베이스 SDK 및 실시간 공유 게임 엔진 (통째로 복사해서 사용하세요)
-      ========================================================================
-    -->
+    <!-- 🔥 FIREBASE ENGINE (모듈 스크립트) -->
     <script type="module">
-        // 1. 파이어베이스 라이브러리 불러오기 (수정하지 마시고 그대로 두세요!)
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // 2. 💡 [여기만 본인 파이어베이스 정보로 수정하세요!]
-       const firebaseConfig = {
-  apiKey: "AIzaSyDPT9oQ4rtVdPjSBY7mzqFQ714CtwKfYHw",
+        // ⚠️ [중요] 아래 const firebaseConfig 객체의 값들만 본인 Firebase 프로젝트 설정 값으로 수정해주세요!
+        const firebaseConfig = {
+ apiKey: "AIzaSyDPT9oQ4rtVdPjSBY7mzqFQ714CtwKfYHw",
   authDomain: "baseball-368e9.firebaseapp.com",
   databaseURL: "https://baseball-368e9-default-rtdb.firebaseio.com",
   projectId: "baseball-368e9",
@@ -271,12 +255,11 @@
   measurementId: "G-XM3L46Y85M"
 };
 
-        // 3. 파이어베이스 및 데이터베이스 초기화
+
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const matchRef = ref(db, 'liveMatch');
 
-        // KBO 10개 구단 데이터 목록
         const kboTeams = ["삼성", "KIA", "LG", "두산", "SSG", "KT", "NC", "롯데", "한화", "키움"];
 
         let matchData = {
@@ -289,7 +272,7 @@
             players: []
         };
 
-        // 4. 실시간 Firebase 동기화 (접속한 모든 사람의 화면에 동시에 반영)
+        // 실시간 Firebase 동기화
         onValue(matchRef, (snapshot) => {
             const data = snapshot.val();
             if (!data) {
@@ -303,17 +286,16 @@
             }
         });
 
-        // 5. 스코어보드 UI 업데이트
         function renderScoreboard() {
-            document.getElementById('header-home-team').innerText = matchData.homeTeam;
-            document.getElementById('header-away-team').innerText = matchData.awayTeam;
-            document.getElementById('home-team-name').innerText = matchData.homeTeam;
-            document.getElementById('away-team-name').innerText = matchData.awayTeam;
-            document.getElementById('home-team-badge').innerText = matchData.homeTeam.substring(0, 1);
-            document.getElementById('away-team-badge').innerText = matchData.awayTeam.substring(0, 1);
+            document.getElementById('header-home-team').innerText = matchData.homeTeam || "홈";
+            document.getElementById('header-away-team').innerText = matchData.awayTeam || "어웨이";
+            document.getElementById('home-team-name').innerText = matchData.homeTeam || "홈";
+            document.getElementById('away-team-name').innerText = matchData.awayTeam || "어웨이";
+            document.getElementById('home-team-badge').innerText = (matchData.homeTeam || "홈").substring(0, 1);
+            document.getElementById('away-team-badge').innerText = (matchData.awayTeam || "어").substring(0, 1);
             
-            document.getElementById('live-home-score').innerText = matchData.homeScore;
-            document.getElementById('live-away-score').innerText = matchData.awayScore;
+            document.getElementById('live-home-score').innerText = matchData.homeScore || 0;
+            document.getElementById('live-away-score').innerText = matchData.awayScore || 0;
             document.getElementById('live-inning-display').innerText = matchData.inning || "진행 중";
 
             const players = matchData.players || [];
@@ -322,59 +304,12 @@
                 const awayAvg = (players.reduce((sum, p) => sum + (p.awayPredict || 0), 0) / players.length).toFixed(1);
                 document.getElementById('home-bet-avg').innerText = `예측 평균: ${homeAvg} 점`;
                 document.getElementById('away-bet-avg').innerText = `예측 평균: ${awayAvg} 점`;
+            } else {
+                document.getElementById('home-bet-avg').innerText = `예측 평균: - 점`;
+                document.getElementById('away-bet-avg').innerText = `예측 평균: - 점`;
             }
         }
 
-        // 6. 관리자 제어 패널 (구단 변경, 실시간 점수 변경, 비밀번호 검증 및 수정)
-        window.openAdminPanel = function() {
-            let inputPw = prompt("관리자 비밀번호를 입력하세요:");
-            if (inputPw !== (matchData.adminPassword || "1234")) {
-                alert("비밀번호가 틀렸습니다!");
-                return;
-            }
-
-            let choice = prompt(
-                "원하는 관리 작업을 선택하세요:\n" +
-                "1: 홈/어웨이 팀 설정 (10개 구단)\n" +
-                "2: 현재 경기 점수 및 이닝 변경\n" +
-                "3: 관리자 비밀번호 변경", "1"
-            );
-
-            if (choice === "1") {
-                let home = prompt("홈팀 선택 (" + kboTeams.join(", ") + ")", matchData.homeTeam);
-                let away = prompt("어웨이팀 선택 (" + kboTeams.join(", ") + ")", matchData.awayTeam);
-                if (home && away && kboTeams.includes(home) && kboTeams.includes(away)) {
-                    matchData.homeTeam = home;
-                    matchData.awayTeam = away;
-                    update(matchRef, { homeTeam: home, awayTeam: away });
-                    alert("홈/어웨이 팀이 정상적으로 변경되었습니다!");
-                } else {
-                    alert("올바른 KBO 구단명을 정확히 입력해주세요.");
-                }
-            } else if (choice === "2") {
-                let hScore = parseInt(prompt("홈팀 점수", matchData.homeScore), 10);
-                let aScore = parseInt(prompt("어웨이팀 점수", matchData.awayScore), 10);
-                let inn = prompt("이닝 (예: 5회초, 경기종료)", matchData.inning);
-                if (!isNaN(hScore) && !isNaN(aScore)) {
-                    matchData.homeScore = hScore;
-                    matchData.awayScore = aScore;
-                    if (inn) matchData.inning = inn;
-                    update(matchRef, { homeScore: hScore, awayScore: aScore, inning: matchData.inning });
-                    alert("경기 점수가 실시간 반영되었습니다!");
-                } else {
-                    alert("점수는 숫자만 입력해 주세요.");
-                }
-            } else if (choice === "3") {
-                let newPw = prompt("새 관리자 비밀번호를 입력하세요:");
-                if (newPw) {
-                    matchData.adminPassword = newPw;
-                    update(matchRef, { adminPassword: newPw });
-                    alert("관리자 비밀번호가 변경되었습니다!");
-                }
-            }
-        };
-
-        // 7. 참여자 배팅 카드리스트 렌더링
         function renderBettingCards() {
             const container = document.getElementById('betting-cards-container');
             const badge = document.getElementById('player-count-badge');
@@ -394,11 +329,11 @@
                     </div>
                     <div class="grid grid-cols-2 gap-2 mb-3 text-center">
                         <div class="bg-blue-900/30 p-2 rounded-xl border border-blue-500/30">
-                            <span class="text-xs text-blue-300 block">${matchData.homeTeam} 예측</span>
+                            <span class="text-xs text-blue-300 block">${matchData.homeTeam || '홈'} 예측</span>
                             <span class="text-2xl font-black text-white">${player.homePredict || 0}</span>
                         </div>
                         <div class="bg-red-900/30 p-2 rounded-xl border border-red-500/30">
-                            <span class="text-xs text-red-300 block">${matchData.awayTeam} 예측</span>
+                            <span class="text-xs text-red-300 block">${matchData.awayTeam || '어웨이'} 예측</span>
                             <span class="text-2xl font-black text-white">${player.awayPredict || 0}</span>
                         </div>
                     </div>
@@ -409,23 +344,70 @@
             `).join('');
         }
 
-        // 8. 참여자 배팅 예측값 제출/수정
-        window.userBet = function(idx) {
-            let p = matchData.players[idx];
-            let h = parseInt(prompt(`${matchData.homeTeam} 예측 점수:`, p.homePredict || 0), 10);
-            let a = parseInt(prompt(`${matchData.awayTeam} 예측 점수:`, p.awayPredict || 0), 10);
-            let bet = parseInt(prompt(`배팅 금액 (보유: ${p.money || 10000}P):`, p.betAmount || 1000), 10);
+        function renderLeaderboard() {
+            const tbody = document.getElementById('leaderboard-table-body');
+            if (!tbody) return;
 
-            if (!isNaN(h) && !isNaN(a) && !isNaN(bet)) {
-                matchData.players[idx].homePredict = h;
-                matchData.players[idx].awayPredict = a;
-                matchData.players[idx].betAmount = Math.min(bet, p.money || 10000);
-                matchData.players[idx].locked = true;
-                update(matchRef, { players: matchData.players });
+            const players = [...(matchData.players || [])].sort((a,b) => (b.money || 0) - (a.money || 0));
+
+            tbody.innerHTML = players.map((p, i) => `
+                <tr class="hover:bg-slate-800/40 transition-colors">
+                    <td class="py-3 px-4 font-bold text-amber-400">${i + 1}위</td>
+                    <td class="py-3 px-4 font-bold text-white">${p.name}</td>
+                    <td class="py-3 px-4 text-center">${p.homePredict || 0} : ${p.awayPredict || 0}</td>
+                    <td class="py-3 px-4 text-center text-amber-400">${(p.betAmount || 0).toLocaleString()} P</td>
+                    <td class="py-3 px-4 text-right font-black text-emerald-400">${(p.money || 10000).toLocaleString()} P</td>
+                </tr>
+            `).join('');
+        }
+
+        // 전역 함수 등록 (HTML onclick 버튼 작동용)
+        window.openAdminPanel = function() {
+            let inputPw = prompt("관리자 비밀번호를 입력하세요:");
+            if (inputPw !== (matchData.adminPassword || "1234")) {
+                alert("비밀번호가 틀렸습니다!");
+                return;
+            }
+
+            let choice = prompt(
+                "원하는 관리 작업을 선택하세요:\n" +
+                "1: 홈/어웨이 팀 설정 (10개 구단)\n" +
+                "2: 현재 경기 점수 및 이닝 변경\n" +
+                "3: 관리자 비밀번호 변경", "1"
+            );
+
+            if (choice === "1") {
+                let home = prompt("홈팀 선택 (" + kboTeams.join(", ") + ")", matchData.homeTeam || "삼성");
+                let away = prompt("어웨이팀 선택 (" + kboTeams.join(", ") + ")", matchData.awayTeam || "KIA");
+                if (home && away && kboTeams.includes(home) && kboTeams.includes(away)) {
+                    matchData.homeTeam = home;
+                    matchData.awayTeam = away;
+                    update(matchRef, { homeTeam: home, awayTeam: away });
+                    alert("홈/어웨이 팀이 변경되었습니다!");
+                } else {
+                    alert("올바른 구단명을 입력해주세요.");
+                }
+            } else if (choice === "2") {
+                let hScore = parseInt(prompt("홈팀 점수", matchData.homeScore || 0), 10);
+                let aScore = parseInt(prompt("어웨이팀 점수", matchData.awayScore || 0), 10);
+                let inn = prompt("이닝 (예: 5회초, 경기종료)", matchData.inning || "5회초");
+                if (!isNaN(hScore) && !isNaN(aScore)) {
+                    matchData.homeScore = hScore;
+                    matchData.awayScore = aScore;
+                    if (inn) matchData.inning = inn;
+                    update(matchRef, { homeScore: hScore, awayScore: aScore, inning: matchData.inning });
+                    alert("경기 점수가 실시간 반영되었습니다!");
+                }
+            } else if (choice === "3") {
+                let newPw = prompt("새 관리자 비밀번호를 입력하세요:");
+                if (newPw) {
+                    matchData.adminPassword = newPw;
+                    update(matchRef, { adminPassword: newPw });
+                    alert("관리자 비밀번호가 변경되었습니다!");
+                }
             }
         };
 
-        // 9. 참여자 / 테이블 추가 기능
         window.addPlayer = function() {
             const input = document.getElementById('new-player-name');
             if (!input) return;
@@ -451,25 +433,21 @@
             input.value = '';
         };
 
-        // 10. 실시간 랭킹 순위표
-        function renderLeaderboard() {
-            const tbody = document.getElementById('leaderboard-table-body');
-            if (!tbody) return;
+        window.userBet = function(idx) {
+            let p = matchData.players[idx];
+            let h = parseInt(prompt(`${matchData.homeTeam} 예측 점수:`, p.homePredict || 0), 10);
+            let a = parseInt(prompt(`${matchData.awayTeam} 예측 점수:`, p.awayPredict || 0), 10);
+            let bet = parseInt(prompt(`배팅 금액 (보유: ${p.money || 10000}P):`, p.betAmount || 1000), 10);
 
-            const players = [...(matchData.players || [])].sort((a,b) => (b.money || 0) - (a.money || 0));
+            if (!isNaN(h) && !isNaN(a) && !isNaN(bet)) {
+                matchData.players[idx].homePredict = h;
+                matchData.players[idx].awayPredict = a;
+                matchData.players[idx].betAmount = Math.min(bet, p.money || 10000);
+                matchData.players[idx].locked = true;
+                update(matchRef, { players: matchData.players });
+            }
+        };
 
-            tbody.innerHTML = players.map((p, i) => `
-                <tr class="hover:bg-slate-800/40 transition-colors">
-                    <td class="py-3 px-4 font-bold text-amber-400">${i + 1}위</td>
-                    <td class="py-3 px-4 font-bold text-white">${p.name}</td>
-                    <td class="py-3 px-4 text-center">${p.homePredict || 0} : ${p.awayPredict || 0}</td>
-                    <td class="py-3 px-4 text-center text-amber-400">${(p.betAmount || 0).toLocaleString()} P</td>
-                    <td class="py-3 px-4 text-right font-black text-emerald-400">${(p.money || 10000).toLocaleString()} P</td>
-                </tr>
-            `).join('');
-        }
-
-        // 11. 최종 경기 결과 정산
         window.calculateSettlement = function() {
             let inputPw = prompt("관리자 비밀번호를 입력하세요:");
             if (inputPw !== (matchData.adminPassword || "1234")) {
@@ -477,8 +455,8 @@
                 return;
             }
 
-            const actH = matchData.homeScore;
-            const actA = matchData.awayScore;
+            const actH = matchData.homeScore || 0;
+            const actA = matchData.awayScore || 0;
 
             if (!matchData.players || matchData.players.length === 0) {
                 alert("정산할 참여자가 없습니다.");
@@ -499,7 +477,6 @@
             try { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); } catch(e) {}
         };
 
-        // 12. 탭 전환 및 링크 복사 기능
         window.switchTab = function(tabName) {
             ['betting', 'settlement', 'leaderboard', 'rules'].forEach(t => {
                 const btn = document.getElementById(`tab-${t}`);
@@ -516,6 +493,8 @@
 
         window.copyShareLink = function() {
             navigator.clipboard.writeText(window.location.href);
-            alert("초대 링크가 복사되었습니다! 카카오톡 등으로 공유해 보세요.");
+            alert("초대 링크가 복사되었습니다!");
         };
     </script>
+</body>
+</html>
